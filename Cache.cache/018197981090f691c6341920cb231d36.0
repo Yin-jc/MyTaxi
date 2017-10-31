@@ -1,0 +1,17 @@
+http://httpbin.org/get?id=id
+GET
+0
+HTTP/1.1 200 OK
+12
+Connection: keep-alive
+Server: meinheld/0.6.1
+Date: Tue, 31 Oct 2017 11:19:23 GMT
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+X-Powered-By: Flask
+X-Processed-Time: 0.000791072845459
+Content-Length: 307
+Via: 1.1 vegur
+OkHttp-Sent-Millis: 1509448809847
+OkHttp-Received-Millis: 1509448810126
