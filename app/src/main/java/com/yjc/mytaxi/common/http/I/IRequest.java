@@ -8,8 +8,8 @@ import java.util.Map;
  */
 
 public interface IRequest {
-    public static final String POST="POST";
-    public static final String GET="GET";
+    String POST="POST";
+    String GET="GET";
 
     /**
      * 绑定请求方式
