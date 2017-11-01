@@ -1,7 +1,7 @@
-package com.yjc.mytaxi.common.http.I.impl;
+package com.yjc.mytaxi.common.impl;
 
 import com.google.gson.Gson;
-import com.yjc.mytaxi.common.http.I.IRequest;
+import com.yjc.mytaxi.common.IRequest;
 
 import java.util.HashMap;
 import java.util.Map;

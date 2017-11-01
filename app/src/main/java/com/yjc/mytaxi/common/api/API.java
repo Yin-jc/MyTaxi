@@ -1,4 +1,4 @@
-package com.yjc.mytaxi.common.http.I.api;
+package com.yjc.mytaxi.common.api;
 
 /**
  * Created by Administrator on 2017/10/31/031.

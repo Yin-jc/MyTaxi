@@ -1,4 +1,4 @@
-package com.yjc.mytaxi.common.http.I;
+package com.yjc.mytaxi.common;
 
 import java.util.Map;
 

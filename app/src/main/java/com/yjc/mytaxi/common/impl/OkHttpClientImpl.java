@@ -1,8 +1,8 @@
-package com.yjc.mytaxi.common.http.I.impl;
+package com.yjc.mytaxi.common.impl;
 
-import com.yjc.mytaxi.common.http.I.IHttpClient;
-import com.yjc.mytaxi.common.http.I.IRequest;
-import com.yjc.mytaxi.common.http.I.IResponse;
+import com.yjc.mytaxi.common.IHttpClient;
+import com.yjc.mytaxi.common.IRequest;
+import com.yjc.mytaxi.common.IResponse;
 
 import java.io.IOException;
 import java.util.Map;
@@ -12,7 +12,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 /**
  * Created by Administrator on 2017/10/31/031.
