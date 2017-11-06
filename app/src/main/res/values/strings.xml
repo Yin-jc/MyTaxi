@@ -2,4 +2,11 @@
     <string name="app_name">MyTaxi</string>
     <string name="splash_message">美好一天，平安出行</string>
     <string name="sms_send_fail">服务器异常，验证码未发送成功</string>
+    <string name="error_server">服务器繁忙</string>
+    <string name="create_pw">创建密码</string>
+    <string name="pls_input_pw">请输入密码</string>
+    <string name="pls_input_pw_again">请两次输入密码</string>
+    <string name="password_is_null">密码不能为空</string>
+    <string name="password_is_not_equal">两次密码输入不一致</string>
+    <string name="register_suc_and_loading">注册成功，正在为您自动登录</string>
 </resources>

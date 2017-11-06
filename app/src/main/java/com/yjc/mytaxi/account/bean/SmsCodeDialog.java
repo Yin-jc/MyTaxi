@@ -40,6 +40,9 @@ public class SmsCodeDialog extends Dialog{
     private static final int SMS_SEND_FAIL = -1;
     private static final int SMS_CHECK_SUC = 2;
     private static final int SMS_CHECK_FAIL = -2;
+    private static final int USER_EXIST = 3;
+    private static final int USER_NOT_EXIST = -3;
+    private static final int SMS_SERVER_FAIL = 100;
     private String mPhone;
     private Button mResentBtn;
     private VerificationCodeInput mVerificationCodeInput;
@@ -101,7 +104,34 @@ public class SmsCodeDialog extends Dialog{
                     //  验证码校验失败
                     dialog.showVerifyState(false);
                     break;
+                case SmsCodeDialog.USER_EXIST:
+                    //用户存在
+                    dialog.showUserExist(true);
+                    break;
+                case SmsCodeDialog.USER_NOT_EXIST:
+                    //用户不存在
+                    dialog.showUserExist(false);
+                    break;
+                case SmsCodeDialog.SMS_SERVER_FAIL:
+                    //服务器异常
+//                    ToastUtil.show(dialog.getContext(),
+//                            dialog.getContext().getString(R.string.error_server));
+                    break;
             }
+        }
+    }
+
+    private void showUserExist(boolean exist) {
+        mLoading.setVisibility(View.GONE);
+        mErrorView.setVisibility(View.GONE);
+        dismiss();
+        if(!exist){
+            //用户不存在，进入注册
+            CreatePasswordDialog dialog=
+                    new CreatePasswordDialog(getContext(),mPhone);
+            dialog.show();
+        }else {
+            //  用户存在，进入登录
         }
     }
 
@@ -254,9 +284,32 @@ public class SmsCodeDialog extends Dialog{
             mVerificationCodeInput.setEnabled(true);
             mLoading.setVisibility(View.GONE);
         }else {
-            //todo 检查用户是否存在
             mLoading.setVisibility(View.VISIBLE);
             mErrorView.setVisibility(View.GONE);
+            // 检查用户是否存在
+            new Thread(){
+                @Override
+                public void run() {
+                    String url= API.Config.getDomain()+API.CHECK_USER_EXIST;
+                    IRequest request=new BaseRequest(url);
+                    request.setBody("phone",mPhone);
+                    IResponse response=mHttpClient.get(request,false);
+                    Log.d(TAG,response.getData());
+                    if(response.getCode()== BaseResponse.STATE_OK){
+                        BaseBizResponse bizResponse=new Gson()
+                                .fromJson(response.getData(),BaseBizResponse.class);
+                        if(bizResponse.getCode()==BaseBizResponse.STATE_USER_EXIST){
+                            mHandler.sendEmptyMessage(USER_EXIST);
+                        } else if(bizResponse.getCode()==BaseBizResponse.STATE_USER_NOT_EXIST){
+                            mHandler.sendEmptyMessage(USER_NOT_EXIST);
+                        }
+                    }else {
+                        mHandler.sendEmptyMessage(SMS_SERVER_FAIL);
+                    }
+
+                }
+            }.start();
+
         }
     }
 }

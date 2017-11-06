@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_close"
+            android:layout_alignParentRight="true"
+            android:padding="16dp"
+            android:id="@+id/close"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:padding="64dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create_pw"
+            android:id="@+id/dialog_title"
+            style="@style/Dialog.Title"
+            android:gravity="center_horizontal"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Dialog.Input"
+            android:id="@+id/phone"
+            tools:text="你的手机号码为：15919191919"
+            android:gravity="center_horizontal" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/pls_input_pw"
+            style="@style/Dialog.Input"
+            android:id="@+id/pw"
+            android:inputType="textPassword" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/pls_input_pw_again"
+            style="@style/Dialog.Input"
+            android:id="@+id/pwl"
+            android:inputType="textPassword"/>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/loading"
+            android:layout_gravity="center_horizontal"
+            style="@style/Loading"
+            android:visibility="gone"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="错误"
+            android:gravity="center"
+            android:textColor="@color/error_red"
+            android:id="@+id/tips"
+            android:visibility="gone"
+            android:padding="12dp"
+            style="@style/Tips"/>
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="确认"
+        style="@style/Dialog.Button"
+        android:id="@+id/btn_confirm"/>
+
+</LinearLayout>
