@@ -1,4 +1,4 @@
-package com.yjc.mytaxi.account.bean;
+package com.yjc.mytaxi.account;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.yjc.mytaxi.R;
-import com.yjc.mytaxi.account.bean.SmsCodeDialog;
 import com.yjc.mytaxi.common.util.FormaUtil;
 
 /**

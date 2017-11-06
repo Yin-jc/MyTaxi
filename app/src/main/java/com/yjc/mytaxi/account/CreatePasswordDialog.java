@@ -1,4 +1,4 @@
-package com.yjc.mytaxi.account.bean;
+package com.yjc.mytaxi.account;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -17,7 +17,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.yjc.mytaxi.MyTaxiApplication;
 import com.yjc.mytaxi.R;
+import com.yjc.mytaxi.account.response.Account;
+import com.yjc.mytaxi.account.response.LoginResponse;
 import com.yjc.mytaxi.common.http.IHttpClient;
 import com.yjc.mytaxi.common.http.IRequest;
 import com.yjc.mytaxi.common.http.IResponse;
@@ -26,6 +29,7 @@ import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
 import com.yjc.mytaxi.common.http.impl.BaseRequest;
 import com.yjc.mytaxi.common.http.impl.BaseResponse;
 import com.yjc.mytaxi.common.http.impl.OkHttpClientImpl;
+import com.yjc.mytaxi.common.storage.SharedPreferenceDao;
 import com.yjc.mytaxi.common.util.DevUtil;
 
 import java.lang.ref.SoftReference;
@@ -40,6 +44,7 @@ public class CreatePasswordDialog extends Dialog{
     private static final String TAG="CreatePasswordDialog";
     private static final int REGISTER_SUC=1;
     private static final int SERVER_FAIL=100;
+    private static final int LOGIN_SUC = 2;
     private TextView mTitle;
     private TextView mPhone;
     private EditText mPw;
@@ -74,9 +79,18 @@ public class CreatePasswordDialog extends Dialog{
                     dialog.showRegisterSuc();
                     break;
                 case SERVER_FAIL:
+                    dialog.showServerError();
                     break;
+                case LOGIN_SUC:
+                    dialog.
             }
         }
+    }
+
+    private void showServerError() {
+        mTips.setTextColor(getContext().getResources()
+                .getColor(R.color.error_red));
+        mTips.setText(getContext().getString(R.string.error_server));
     }
 
     /**
@@ -91,6 +105,36 @@ public class CreatePasswordDialog extends Dialog{
         mTips.setText(getContext()
                 .getString(R.string.register_suc_and_loading));
         // 请求网络，完成自动登录
+        new Thread(){
+            @Override
+            public void run() {
+                String url= API.Config.getDomain()+API.LOGIN;
+                IRequest request=new BaseRequest(url);
+                request.setBody("phone",mPhoneStr);
+                String password=mPw.getText().toString();
+                request.setBody("password",password);
+                IResponse response=mHttpClient.post(request,false);
+                Log.d(TAG,response.getData());
+                if(response.getCode()== BaseResponse.STATE_OK){
+                    LoginResponse loginRes=new Gson()
+                            .fromJson(response.getData(),LoginResponse.class);
+                    if(loginRes.getCode()==BaseBizResponse.STATE_OK){
+                        //保存登录信息
+                        Account account=loginRes.getData();
+                        SharedPreferenceDao dao=
+                                new SharedPreferenceDao(MyTaxiApplication.getInstance()
+                                ,SharedPreferenceDao.FILE_ACCOUNT);
+                        dao.save(SharedPreferenceDao.KEY_ACCOUNT,account);
+                        mHandler.sendEmptyMessage(LOGIN_SUC);
+                    } else {
+                        mHandler.sendEmptyMessage(SERVER_FAIL);
+                    }
+                }else {
+
+                }
+
+            }
+        }.start();
 
     }
 

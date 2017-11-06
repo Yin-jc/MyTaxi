@@ -19,6 +19,8 @@ public class API {
             "/f34e28da5816433d/isUserExist?phone=${phone}";
     //用户注册
     public static final String REGISTER = "/f34e28da5816433d/register";
+    //登陆
+    public static final String LOGIN = "/f34e28da5816433d/auth";
 
 
     /**

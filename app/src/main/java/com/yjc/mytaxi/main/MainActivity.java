@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.yjc.mytaxi.R;
-import com.yjc.mytaxi.account.bean.PhoneInputDialog;
+import com.yjc.mytaxi.account.PhoneInputDialog;
 
 /**
  * 检查本地记录

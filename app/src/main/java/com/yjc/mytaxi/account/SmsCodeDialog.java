@@ -1,4 +1,4 @@
-package com.yjc.mytaxi.account.bean;
+package com.yjc.mytaxi.account;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dalimao.corelibrary.VerificationCodeInput;
 import com.google.gson.Gson;
