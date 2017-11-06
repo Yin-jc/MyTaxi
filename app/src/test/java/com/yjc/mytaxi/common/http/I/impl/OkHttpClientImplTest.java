@@ -1,11 +1,11 @@
 package com.yjc.mytaxi.common.http.I.impl;
 
-import com.yjc.mytaxi.common.IHttpClient;
-import com.yjc.mytaxi.common.IRequest;
-import com.yjc.mytaxi.common.IResponse;
-import com.yjc.mytaxi.common.api.API;
-import com.yjc.mytaxi.common.impl.BaseRequest;
-import com.yjc.mytaxi.common.impl.OkHttpClientImpl;
+import com.yjc.mytaxi.common.http.IHttpClient;
+import com.yjc.mytaxi.common.http.IRequest;
+import com.yjc.mytaxi.common.http.IResponse;
+import com.yjc.mytaxi.common.http.api.API;
+import com.yjc.mytaxi.common.http.impl.BaseRequest;
+import com.yjc.mytaxi.common.http.impl.OkHttpClientImpl;
 
 import org.junit.Before;
 import org.junit.Test;

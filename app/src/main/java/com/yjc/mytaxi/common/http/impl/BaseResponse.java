@@ -1,6 +1,6 @@
-package com.yjc.mytaxi.common.impl;
+package com.yjc.mytaxi.common.http.impl;
 
-import com.yjc.mytaxi.common.IResponse;
+import com.yjc.mytaxi.common.http.IResponse;
 
 /**
  * Created by Administrator on 2017/10/31/031.
@@ -8,6 +8,7 @@ import com.yjc.mytaxi.common.IResponse;
 
 public class BaseResponse implements IResponse {
     public static final int STATE_UNKNOWN_ERROR=100001;
+    public static final int STATE_OK = 200;
     //状态码
     private int code;
     //响应数据

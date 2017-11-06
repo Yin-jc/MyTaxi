@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MyTaxi</string>
     <string name="splash_message">美好一天，平安出行</string>
+    <string name="sms_send_fail">服务器异常，验证码未发送成功</string>
 </resources>

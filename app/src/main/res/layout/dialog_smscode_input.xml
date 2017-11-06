@@ -26,7 +26,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="请输入密码"
+            android:text="请输入验证码"
             android:id="@+id/dialog_title"
             style="@style/Dialog.Title"
             android:gravity="center_horizontal"/>
