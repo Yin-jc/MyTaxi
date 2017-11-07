@@ -1,4 +1,4 @@
-package com.yjc.mytaxi.account;
+package com.yjc.mytaxi.account.view;
 
 import android.app.Dialog;
 import android.content.Context;

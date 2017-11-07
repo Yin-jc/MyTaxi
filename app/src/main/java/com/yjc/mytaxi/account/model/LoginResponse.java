@@ -1,5 +1,6 @@
-package com.yjc.mytaxi.account.response;
+package com.yjc.mytaxi.account.model;
 
+import com.yjc.mytaxi.account.model.Account;
 import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
 
 /**

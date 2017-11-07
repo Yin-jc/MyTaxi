@@ -1,4 +1,4 @@
-package com.yjc.mytaxi.account.response;
+package com.yjc.mytaxi.account.model;
 
 /**
  * Created by Administrator on 2017/11/6/006.

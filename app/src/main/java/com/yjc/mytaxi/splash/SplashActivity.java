@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.yjc.mytaxi.R;
-import com.yjc.mytaxi.main.MainActivity;
+import com.yjc.mytaxi.main.view.MainActivity;
 
 public class SplashActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.yjc.mytaxi.account;
+package com.yjc.mytaxi.account.view;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -14,13 +14,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.yjc.mytaxi.MyTaxiApplication;
 import com.yjc.mytaxi.R;
-import com.yjc.mytaxi.account.response.Account;
-import com.yjc.mytaxi.account.response.LoginResponse;
+import com.yjc.mytaxi.account.model.Account;
+import com.yjc.mytaxi.account.model.AccountManagerImpl;
+import com.yjc.mytaxi.account.model.IAccountManager;
+import com.yjc.mytaxi.account.model.LoginResponse;
+import com.yjc.mytaxi.account.presenter.ILoginDialogPresenter;
+import com.yjc.mytaxi.account.presenter.LoginDialogPresenterImpl;
+import com.yjc.mytaxi.account.presenter.SmsCodeDialogPresenterImpl;
 import com.yjc.mytaxi.common.http.IHttpClient;
 import com.yjc.mytaxi.common.http.IRequest;
 import com.yjc.mytaxi.common.http.IResponse;
@@ -39,58 +43,25 @@ import java.lang.ref.SoftReference;
  * 登录框
  */
 
-public class LoginDialog extends Dialog{
+public class LoginDialog extends Dialog implements ILoginView{
 
     private static final String TAG ="LoginDialog" ;
-    private static final int LOGIN_SUC = 1;
-    private static final int SERVER_FAIL = -1;
-    private static final int PW_ERROR = -2;
     private TextView mPhone;
     private EditText mPw;
     private Button mBtnConfirm;
     private View mLoading;
     private TextView mTips;
     private String mPhoneStr;
-    private IHttpClient mHttpClient;
-    private MyHandler mHandler;
-
-    /**
-     * 接受子线程消息的Handler
-     */
-    static class MyHandler extends Handler {
-        //软引用
-        SoftReference<LoginDialog> dialogRef;
-
-        public MyHandler(LoginDialog dialog) {
-            dialogRef = new SoftReference<>(dialog);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            LoginDialog dialog=dialogRef.get();
-            if(dialog==null){
-                return;
-            }
-            //处理UI变化
-            switch (msg.what){
-                case LOGIN_SUC:
-                    dialog.showLoginSuc();
-                    break;
-                case PW_ERROR:
-                    dialog.showPasswordError();
-                    break;
-                case SERVER_FAIL:
-                    dialog.showServerError();
-                    break;
-            }
-        }
-    }
+    private ILoginDialogPresenter mPresenter;
 
     public LoginDialog(@NonNull Context context,String phone) {
         this(context, R.style.Dialog);
         mPhoneStr=phone;
-        mHttpClient=new OkHttpClientImpl();
-        mHandler=new MyHandler(this);
+        IHttpClient httpClient=new OkHttpClientImpl();
+        SharedPreferenceDao dao=new SharedPreferenceDao(MyTaxiApplication.getInstance(),
+                SharedPreferenceDao.FILE_ACCOUNT);
+        IAccountManager manager=new AccountManagerImpl(httpClient,dao);
+        mPresenter=new LoginDialogPresenterImpl(this,manager);
     }
 
     public LoginDialog(@NonNull Context context, @StyleRes int themeResId) {
@@ -100,6 +71,24 @@ public class LoginDialog extends Dialog{
     protected LoginDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
     }
+
+    @Override
+    public void showLoading() {
+        showOrHideLoading(true);
+    }
+
+    @Override
+    public void showError(int code, String msg) {
+        switch (code){
+            case IAccountManager.PW_ERROR:
+                showPasswordError();
+                break;
+            case IAccountManager.SERVER_FAIL:
+                showServerError();
+                break;
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,67 +128,18 @@ public class LoginDialog extends Dialog{
     }
 
     private void submit() {
-        final String password=mPw.getText().toString();
+        String password=mPw.getText().toString();
+        //网络请求登录
+        mPresenter.requestLogin(mPhoneStr,password);
 
-        // 网络请求登录
-        new Thread(){
-            @Override
-            public void run() {
-                String url= API.Config.getDomain()+API.LOGIN;
-                IRequest request=new BaseRequest(url);
-                request.setBody("phone",mPhoneStr);
-//                String password=mPw.getText().toString();
-                request.setBody("password",password);
-
-                IResponse response=mHttpClient.post(request,false);
-                Log.d(TAG,response.getData());
-                if(response.getCode()== BaseResponse.STATE_OK){
-                    LoginResponse loginRes=new Gson()
-                            .fromJson(response.getData(),LoginResponse.class);
-                    if(loginRes.getCode()==BaseBizResponse.STATE_OK) {
-                        //保存登录信息
-                        Account account = loginRes.getData();
-                        // TODO: 2017/11/7/007 加密存储
-                        SharedPreferenceDao dao =
-                                new SharedPreferenceDao(MyTaxiApplication.getInstance()
-                                        , SharedPreferenceDao.FILE_ACCOUNT);
-                        dao.save(SharedPreferenceDao.KEY_ACCOUNT, account);
-                        mHandler.sendEmptyMessage(LOGIN_SUC);
-                    }
-                    if(loginRes.getCode()==BaseBizResponse.STATE_PW_ERROR){
-                        mHandler.sendEmptyMessage(PW_ERROR);
-                    } else {
-                        mHandler.sendEmptyMessage(SERVER_FAIL);
-                    }
-                }else {
-                    mHandler.sendEmptyMessage(SERVER_FAIL);
-                }
-
-            }
-        }.start();
-
-    }
-
-    /**
-     * 显示或隐藏Loading
-     * @param show
-     */
-    public void showOrHideLoading(boolean show){
-        if(show){
-            mLoading.setVisibility(View.VISIBLE);
-            mBtnConfirm.setVisibility(View.GONE);
-        }else{
-            mLoading.setVisibility(View.GONE);
-            mBtnConfirm.setVisibility(View.VISIBLE);
-        }
     }
 
     /**
      * 处理登录成功UI
      */
+    @Override
     public void showLoginSuc(){
-        mLoading.setVisibility(View.GONE);
-        mBtnConfirm.setVisibility(View.GONE);
+        showOrHideLoading(false);
         mTips.setVisibility(View.VISIBLE);
         mTips.setTextColor(getContext().getResources().getColor(R.color.color_text_normal));
         mTips.setText("登录成功");
@@ -227,5 +167,23 @@ public class LoginDialog extends Dialog{
         mTips.setText("密码错误");
     }
 
+    /**
+     * 显示或隐藏Loading
+     * @param show
+     */
+    public void showOrHideLoading(boolean show){
+        if(show){
+            mLoading.setVisibility(View.VISIBLE);
+            mBtnConfirm.setVisibility(View.GONE);
+        }else{
+            mLoading.setVisibility(View.GONE);
+            mBtnConfirm.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+    }
 
 }
