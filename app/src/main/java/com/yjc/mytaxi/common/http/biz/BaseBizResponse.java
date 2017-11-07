@@ -12,6 +12,10 @@ public class BaseBizResponse {
     public static final int STATE_USER_EXIST = 100003;
     //用户不存在
     public static final int STATE_USER_NOT_EXIST = 100002;
+    //密码错误
+    public static final int STATE_PW_ERROR = 100005;
+    //token过期
+    public static final int STATE_TOKEN_INVALID = 100006;
     //状态码
     private int code;
     private String msg;

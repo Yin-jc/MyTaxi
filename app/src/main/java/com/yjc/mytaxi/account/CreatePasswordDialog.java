@@ -31,6 +31,7 @@ import com.yjc.mytaxi.common.http.impl.BaseResponse;
 import com.yjc.mytaxi.common.http.impl.OkHttpClientImpl;
 import com.yjc.mytaxi.common.storage.SharedPreferenceDao;
 import com.yjc.mytaxi.common.util.DevUtil;
+import com.yjc.mytaxi.common.util.ToastUtil;
 
 import java.lang.ref.SoftReference;
 
@@ -82,9 +83,14 @@ public class CreatePasswordDialog extends Dialog{
                     dialog.showServerError();
                     break;
                 case LOGIN_SUC:
-                    dialog.
+                    dialog.showLoginSuc();
             }
         }
+    }
+
+    private void showLoginSuc() {
+        dismiss();
+        ToastUtil.show(getContext(),getContext().getString(R.string.login_suc));
     }
 
     private void showServerError() {

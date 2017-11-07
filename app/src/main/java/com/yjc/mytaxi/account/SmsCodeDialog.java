@@ -26,6 +26,7 @@ import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
 import com.yjc.mytaxi.common.http.impl.BaseRequest;
 import com.yjc.mytaxi.common.http.impl.BaseResponse;
 import com.yjc.mytaxi.common.http.impl.OkHttpClientImpl;
+import com.yjc.mytaxi.common.util.ToastUtil;
 
 import java.lang.ref.SoftReference;
 
@@ -113,8 +114,8 @@ public class SmsCodeDialog extends Dialog{
                     break;
                 case SmsCodeDialog.SMS_SERVER_FAIL:
                     //服务器异常
-//                    ToastUtil.show(dialog.getContext(),
-//                            dialog.getContext().getString(R.string.error_server));
+                    ToastUtil.show(dialog.getContext(),
+                            dialog.getContext().getString(R.string.error_server));
                     break;
             }
         }
@@ -131,6 +132,8 @@ public class SmsCodeDialog extends Dialog{
             dialog.show();
         }else {
             //  用户存在，进入登录
+            LoginDialog dialog=new LoginDialog(getContext(),mPhone);
+            dialog.show();
         }
     }
 

@@ -9,4 +9,6 @@
     <string name="password_is_null">密码不能为空</string>
     <string name="password_is_not_equal">两次密码输入不一致</string>
     <string name="register_suc_and_loading">注册成功，正在为您自动登录</string>
+    <string name="login_suc">登录成功</string>
+    <string name="pls_input_phone">请输入手机号码</string>
 </resources>
