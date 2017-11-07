@@ -20,6 +20,7 @@ import com.yjc.mytaxi.account.model.AccountManagerImpl;
 import com.yjc.mytaxi.account.model.IAccountManager;
 import com.yjc.mytaxi.account.presenter.ISMSCodeDialogPresenter;
 import com.yjc.mytaxi.account.presenter.SmsCodeDialogPresenterImpl;
+import com.yjc.mytaxi.common.dataBus.RxBus;
 import com.yjc.mytaxi.common.http.IHttpClient;
 import com.yjc.mytaxi.common.http.impl.OkHttpClientImpl;
 import com.yjc.mytaxi.common.storage.SharedPreferenceDao;
@@ -155,6 +156,9 @@ public class SmsCodeDialog extends Dialog implements ISmsCodeDialogView{
         mErrorView.setVisibility(View.GONE);
         initListeners();
         requestSendSmsCode();
+
+        //注册Presenter
+        RxBus.getInstance().register(mPresenter);
     }
 
     /**
@@ -218,6 +222,9 @@ public class SmsCodeDialog extends Dialog implements ISmsCodeDialogView{
     @Override
     public void dismiss() {
         super.dismiss();
+
+        //注销Presenter
+        RxBus.getInstance().unRegister(mPresenter);
     }
 
 }

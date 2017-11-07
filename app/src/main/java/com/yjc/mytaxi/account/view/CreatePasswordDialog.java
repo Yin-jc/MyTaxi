@@ -26,6 +26,7 @@ import com.yjc.mytaxi.account.model.LoginResponse;
 import com.yjc.mytaxi.account.presenter.CreatePasswordDialogPresenterImpl;
 import com.yjc.mytaxi.account.presenter.ICreatePasswordDialogPresenter;
 import com.yjc.mytaxi.account.presenter.LoginDialogPresenterImpl;
+import com.yjc.mytaxi.common.dataBus.RxBus;
 import com.yjc.mytaxi.common.http.IHttpClient;
 import com.yjc.mytaxi.common.http.IRequest;
 import com.yjc.mytaxi.common.http.IResponse;
@@ -52,7 +53,7 @@ public class CreatePasswordDialog extends Dialog implements ICreatePasswordDialo
     private TextView mPhone;
     private EditText mPw;
     private EditText mRePw;
-    private Button mBtnConfim;
+    private Button mBtnConfirm;
     private View mLoading;
     private TextView mTips;
     private String mPhoneStr;
@@ -66,8 +67,7 @@ public class CreatePasswordDialog extends Dialog implements ICreatePasswordDialo
         SharedPreferenceDao dao=new SharedPreferenceDao(MyTaxiApplication.getInstance(),
                 SharedPreferenceDao.FILE_ACCOUNT);
         IAccountManager manager=new AccountManagerImpl(httpClient,dao);
-        mPresenter=new CreatePasswordDialogPresenterImpl(this, manager) {
-        };
+        mPresenter=new CreatePasswordDialogPresenterImpl(this, manager);
     }
 
     public CreatePasswordDialog(@NonNull Context context, @StyleRes int themeResId) {
@@ -108,7 +108,7 @@ public class CreatePasswordDialog extends Dialog implements ICreatePasswordDialo
     @Override
     public void showRegisterSuc() {
         mLoading.setVisibility(View.VISIBLE);
-        mBtnConfim.setVisibility(View.GONE);
+        mBtnConfirm.setVisibility(View.GONE);
         mTips.setVisibility(View.VISIBLE);
         mTips.setTextColor(getContext().getResources()
                 .getColor(R.color.color_text_normal));
@@ -124,13 +124,16 @@ public class CreatePasswordDialog extends Dialog implements ICreatePasswordDialo
         View root=inflater.inflate(R.layout.dialog_create_pw,null);
         setContentView(root);
         initViews();
+
+        //注册 Presenter
+        RxBus.getInstance().register(mPresenter);
     }
 
     private void initViews() {
         mPhone=findViewById(R.id.phone);
         mPw=findViewById(R.id.pw);
         mRePw=findViewById(R.id.pwl);
-        mBtnConfim=findViewById(R.id.btn_confirm);
+        mBtnConfirm=findViewById(R.id.btn_confirm);
         mLoading=findViewById(R.id.loading);
         mTips=findViewById(R.id.tips);
         mTitle=findViewById(R.id.dialog_title);
@@ -140,7 +143,7 @@ public class CreatePasswordDialog extends Dialog implements ICreatePasswordDialo
                 dismiss();
             }
         });
-        mBtnConfim.setOnClickListener(new View.OnClickListener() {
+        mBtnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submit();
@@ -186,6 +189,9 @@ public class CreatePasswordDialog extends Dialog implements ICreatePasswordDialo
     @Override
     public void dismiss() {
         super.dismiss();
+
+        //注销Presenter
+        RxBus.getInstance().unRegister(mPresenter);
     }
 
 

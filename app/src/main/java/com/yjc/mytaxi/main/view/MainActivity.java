@@ -18,6 +18,7 @@ import com.yjc.mytaxi.account.presenter.LoginDialogPresenterImpl;
 import com.yjc.mytaxi.account.view.PhoneInputDialog;
 import com.yjc.mytaxi.account.model.Account;
 import com.yjc.mytaxi.account.model.LoginResponse;
+import com.yjc.mytaxi.common.dataBus.RxBus;
 import com.yjc.mytaxi.common.http.IHttpClient;
 import com.yjc.mytaxi.common.http.IRequest;
 import com.yjc.mytaxi.common.http.IResponse;
@@ -52,8 +53,18 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         IAccountManager manager=new AccountManagerImpl(httpClient,dao);
         mPresenter=new MainPresenterImpl(this,manager);
         mPresenter.loginByToken();
+
+        //注册 Presenter
+        RxBus.getInstance().register(mPresenter);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        //注销Presenter
+        RxBus.getInstance().unRegister(mPresenter);
+    }
 
     /**
      * 显示手机输入框

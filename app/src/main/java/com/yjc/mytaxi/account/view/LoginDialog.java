@@ -25,6 +25,7 @@ import com.yjc.mytaxi.account.model.LoginResponse;
 import com.yjc.mytaxi.account.presenter.ILoginDialogPresenter;
 import com.yjc.mytaxi.account.presenter.LoginDialogPresenterImpl;
 import com.yjc.mytaxi.account.presenter.SmsCodeDialogPresenterImpl;
+import com.yjc.mytaxi.common.dataBus.RxBus;
 import com.yjc.mytaxi.common.http.IHttpClient;
 import com.yjc.mytaxi.common.http.IRequest;
 import com.yjc.mytaxi.common.http.IResponse;
@@ -98,11 +99,17 @@ public class LoginDialog extends Dialog implements ILoginView{
         View root=inflater.inflate(R.layout.dialog_login_input,null);
         setContentView(root);
         initViews();
+
+        //注册 Presenter
+        RxBus.getInstance().register(mPresenter);
     }
 
     @Override
     public void dismiss() {
         super.dismiss();
+
+        //注销Presenter
+        RxBus.getInstance().unRegister(mPresenter);
     }
 
     private void initViews() {
@@ -143,8 +150,9 @@ public class LoginDialog extends Dialog implements ILoginView{
         mTips.setVisibility(View.VISIBLE);
         mTips.setTextColor(getContext().getResources().getColor(R.color.color_text_normal));
         mTips.setText("登录成功");
-        ToastUtil.show(getContext(),"登录成功");
         dismiss();
+        ToastUtil.show(getContext(),"登录成功");
+
     }
 
     /**

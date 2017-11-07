@@ -31,11 +31,6 @@ public interface IAccountManager {
     //密码错误
     int PW_ERROR=-7;
     /**
-     * Presenter提供给Model一个Handler
-     * @param handler
-     */
-    void setHandler(Handler handler);
-    /**
      * 下发验证码
      * @param phone
      */
