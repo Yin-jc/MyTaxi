@@ -8,6 +8,7 @@ import com.yjc.mytaxi.account.model.LoginResponse;
 import com.yjc.mytaxi.account.presenter.CreatePasswordDialogPresenterImpl;
 import com.yjc.mytaxi.common.dataBus.RegisterBus;
 import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
+import com.yjc.mytaxi.common.lbs.LocationInfo;
 import com.yjc.mytaxi.main.model.IMainManager;
 import com.yjc.mytaxi.main.model.NearDriverResponse;
 import com.yjc.mytaxi.main.view.IMainView;
@@ -52,6 +53,11 @@ public class MainPresenterImpl implements IMainPresenter {
             view.showNears(response.getData());
         }
     }
+
+    @RegisterBus
+    public void onLocationInfo(LocationInfo locationInfo){
+        view.showLocationChange(locationInfo);
+    }
     @Override
     public void loginByToken() {
         accountManager.loginByToken();
@@ -60,5 +66,10 @@ public class MainPresenterImpl implements IMainPresenter {
     @Override
     public void fetchNearDrivers(double latitude, double longtitude) {
         mainManager.fetchNearDrivers(latitude,longtitude);
+    }
+
+    @Override
+    public void updateLocationToServer(LocationInfo locationInfo) {
+        mainManager.updateLocationToServer(locationInfo);
     }
 }

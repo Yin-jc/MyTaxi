@@ -99,7 +99,7 @@ public class GaoDeLbsLayerImpl implements ILbsLayer {
     public void addOrUpdateMarker(LocationInfo locationInfo, Bitmap bitmap) {
         Marker storedMarker=markerMap.get(locationInfo.getKey());
         LatLng latLng=new LatLng(locationInfo.getLatitude(),
-                locationInfo.getLongtitude());
+                locationInfo.getLongitude());
         if(storedMarker!=null){
 //            Log.d(TAG,"addOrUpdateMarker is not null");
             //如果已经存在则更新角度和位置

@@ -2,6 +2,8 @@ package com.yjc.mytaxi.common.dataBus;
 
 import android.util.Log;
 
+import com.yjc.mytaxi.common.lbs.LocationInfo;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -69,10 +71,7 @@ public class RxBus {
                     @Override
                     public void call(Object data) {
                         Log.d(TAG,"chainProcess start");
-                        for (Object subsciber:subscribers){
-                            //扫描注解，将数据发送到注册的对象的标记方法
-                            callMethodByAnnotation(subsciber,data);
-                        }
+                        send(data);
                     }
                 });
     }
@@ -102,6 +101,17 @@ public class RxBus {
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * 发送数据
+     * @param data
+     */
+    public void send(Object data) {
+        for (Object subsciber:subscribers){
+            //扫描注解，将数据发送到注册的对象的标记方法
+            callMethodByAnnotation(subsciber,data);
         }
     }
 }

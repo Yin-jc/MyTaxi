@@ -87,7 +87,9 @@ public class MainActivity extends AppCompatActivity implements IMainView{
                 mLbsLayer.addOrUpdateMarker(locationInfo,
                         BitmapFactory.decodeResource(getResources(),R.drawable.start));
                 //获取附近司机
-                getNearDrivers(locationInfo.getLatitude(),locationInfo.getLongtitude());
+                getNearDrivers(locationInfo.getLatitude(),locationInfo.getLongitude());
+                //上报当前位置
+                updateLocationToServer(locationInfo);
 
             }
         });
@@ -105,12 +107,21 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     }
 
     /**
+     * 上报当前位置
+     * @param locationInfo
+     */
+    private void updateLocationToServer(LocationInfo locationInfo) {
+        locationInfo.setKey(mPushKey);
+        mPresenter.updateLocationToServer(locationInfo);
+    }
+
+    /**
      * 获取附近的司机
      * @param latitude
-     * @param longtitude
+     * @param longitude
      */
-    private void getNearDrivers(double latitude, double longtitude) {
-        mPresenter.fetchNearDrivers(latitude,longtitude);
+    private void getNearDrivers(double latitude, double longitude) {
+        mPresenter.fetchNearDrivers(latitude,longitude);
     }
 
 
@@ -147,12 +158,17 @@ public class MainActivity extends AppCompatActivity implements IMainView{
 
     @Override
     public void showNears(List<LocationInfo> data) {
+        for (LocationInfo locationInfo:data){
+            showLocationChange(locationInfo);
+        }
+    }
+
+    @Override
+    public void showLocationChange(LocationInfo locationInfo) {
         if(mDriverBit==null || mDriverBit.isRecycled()){
             mDriverBit=BitmapFactory.decodeResource(getResources(),R.drawable.car);
         }
-        for (LocationInfo locationInfo:data){
-            mLbsLayer.addOrUpdateMarker(locationInfo,mDriverBit);
-        }
+        mLbsLayer.addOrUpdateMarker(locationInfo,mDriverBit);
     }
 
     /**

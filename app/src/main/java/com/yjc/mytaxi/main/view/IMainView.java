@@ -12,5 +12,15 @@ import java.util.List;
 public interface IMainView extends IView{
     void showLoginSuc();
 
+    /**
+     * 显示附近司机
+     * @param data
+     */
     void showNears(List<LocationInfo> data);
+
+    /**
+     * 显示位置变化
+     * @param locationInfo
+     */
+    void showLocationChange(LocationInfo locationInfo);
 }

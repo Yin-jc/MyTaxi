@@ -8,12 +8,12 @@ public class LocationInfo {
     private String key;
     private String name;
     private double latitude;
-    private double longtitude;
+    private double longitude;
     private float rotation;
 
-    public LocationInfo(double latitude, double longtitude) {
+    public LocationInfo(double latitude, double longitude) {
         this.latitude = latitude;
-        this.longtitude = longtitude;
+        this.longitude = longitude;
     }
 
     public String getKey() {
@@ -48,12 +48,12 @@ public class LocationInfo {
         this.latitude = latitude;
     }
 
-    public double getLongtitude() {
-        return longtitude;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setLongtitude(double longtitude) {
-        this.longtitude = longtitude;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }
 
