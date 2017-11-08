@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.yjc.mytaxi.R;
 import com.yjc.mytaxi.common.util.FormaUtil;
@@ -78,6 +79,13 @@ public class PhoneInputDialog extends Dialog {
                 dialog.show();
             }
         });
+
+        findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
 
@@ -88,5 +96,10 @@ public class PhoneInputDialog extends Dialog {
         String phone=mPhone.getText().toString();
         boolean legal= FormaUtil.checkMobile(phone);
         mButton.setEnabled(legal);
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
     }
 }
