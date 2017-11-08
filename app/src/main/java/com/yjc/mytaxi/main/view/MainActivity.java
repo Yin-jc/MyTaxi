@@ -19,6 +19,7 @@ import com.yjc.mytaxi.account.model.IAccountManager;
 import com.yjc.mytaxi.account.view.PhoneInputDialog;
 import com.yjc.mytaxi.common.dataBus.RxBus;
 import com.yjc.mytaxi.common.http.IHttpClient;
+import com.yjc.mytaxi.common.http.api.API;
 import com.yjc.mytaxi.common.http.impl.OkHttpClientImpl;
 import com.yjc.mytaxi.common.lbs.GaoDeLbsLayerImpl;
 import com.yjc.mytaxi.common.lbs.ILbsLayer;
@@ -31,6 +32,10 @@ import com.yjc.mytaxi.main.presenter.IMainPresenter;
 import com.yjc.mytaxi.main.presenter.MainPresenterImpl;
 
 import java.util.List;
+
+import cn.bmob.push.BmobPush;
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobInstallation;
 
 /**
  * 检查本地记录
@@ -49,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     private IMainPresenter mPresenter;
     private ILbsLayer mLbsLayer;
     private Bitmap mDriverBit;
+    private String mPushKey;
 
 
     @Override
@@ -73,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements IMainView{
             @Override
             public void onLocationChange(LocationInfo locationInfo) {
                 Log.d(TAG,"onLocationChange");
-                showNears();
             }
 
             @Override
@@ -88,6 +93,15 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         });
         ViewGroup mapViewContainer= (ViewGroup) findViewById(R.id.activity_main);
         mapViewContainer.addView(mLbsLayer.getMapView());
+
+        //推送服务 初始化BmobSDK
+        Bmob.initialize(this, API.Config.getAppId());
+        //使用推送服务时的初始化操作
+        BmobInstallation installation=BmobInstallation.getCurrentInstallation(this);
+        installation.save();
+        mPushKey=installation.getInstallationId();
+        //启动推送服务
+        BmobPush.startWork(this);
     }
 
     /**
