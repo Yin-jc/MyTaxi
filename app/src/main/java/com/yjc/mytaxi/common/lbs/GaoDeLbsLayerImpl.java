@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -12,6 +13,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.AMap;
+import com.amap.api.maps2d.AMapException;
 import com.amap.api.maps2d.CameraUpdate;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.LocationSource;
@@ -23,11 +25,16 @@ import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
+import com.amap.api.services.help.Inputtips;
+import com.amap.api.services.help.InputtipsQuery;
+import com.amap.api.services.help.Tip;
 import com.yjc.mytaxi.R;
 import com.yjc.mytaxi.common.util.SensorEventHelper;
 import com.yjc.mytaxi.main.view.MainActivity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,6 +60,8 @@ public class GaoDeLbsLayerImpl implements ILbsLayer {
     private MyLocationStyle mMyLocationStyle;
     //管理地图标记集合
     private Map<String,Marker> markerMap=new HashMap<>();
+    //当前城市
+    private String mCity;
 
     public GaoDeLbsLayerImpl(Context context) {
         mContext = context;
@@ -124,6 +133,45 @@ public class GaoDeLbsLayerImpl implements ILbsLayer {
     }
 
     @Override
+    public String getCity() {
+        return mCity;
+    }
+
+    @Override
+    public void poiSearch(String key, final OnSearchedListener listener) {
+        if(!TextUtils.isEmpty(key)){
+            //组装关键字
+            InputtipsQuery inputtipsQuery=new InputtipsQuery(key,"");
+            final Inputtips inputTips=new Inputtips(mContext,inputtipsQuery);
+            //开始异步搜索
+            inputTips.requestInputtipsAsyn();
+            //监听处理搜索结果
+            inputTips.setInputtipsListener(new Inputtips.InputtipsListener() {
+                @Override
+                public void onGetInputtips(List<Tip> list, int rCode) {
+                    if(rCode== com.amap.api.services.core.AMapException.CODE_AMAP_SUCCESS) {
+                        //正确返回解析结果
+                        List<LocationInfo> locationInfos =
+                                new ArrayList<>();
+                        for (int i=0;i<list.size();i++){
+                            Tip tip=list.get(i);
+                            LocationInfo locationInfo=new LocationInfo(
+                                    tip.getPoint().getLatitude(),
+                                    tip.getPoint().getLongitude()
+                            );
+                            locationInfo.setName(tip.getName());
+                            locationInfos.add(locationInfo);
+                        }
+                        listener.onSearched(locationInfos);
+                    }else {
+                        listener.onError(rCode);
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
     public void onCreate(Bundle state) {
         mapView.onCreate(state);
         //设置当前位置的图标
@@ -165,6 +213,8 @@ public class GaoDeLbsLayerImpl implements ILbsLayer {
             public void onLocationChanged(AMapLocation aMapLocation) {
                 //定位位置变化
                 if(mMapLocationChangeListener!=null){
+                    //当前城市
+                    mCity=aMapLocation.getCity();
                     //地图已经激活，通知蓝点实时更新
                     //显示系统小蓝点
                     //位置变更逻辑在此接口的实现类中完成

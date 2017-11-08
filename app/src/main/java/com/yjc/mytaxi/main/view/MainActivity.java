@@ -9,8 +9,12 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 
 import com.yjc.mytaxi.MyTaxiApplication;
 import com.yjc.mytaxi.R;
@@ -30,6 +34,8 @@ import com.yjc.mytaxi.main.model.IMainManager;
 import com.yjc.mytaxi.main.model.MainManagerImpl;
 import com.yjc.mytaxi.main.presenter.IMainPresenter;
 import com.yjc.mytaxi.main.presenter.MainPresenterImpl;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -55,6 +61,15 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     private ILbsLayer mLbsLayer;
     private Bitmap mDriverBit;
     private String mPushKey;
+    //起点与终点
+    private AutoCompleteTextView mStartEdit;
+    private AutoCompleteTextView mEndEdit;
+    private PoiAdapter mEndAdapter;
+    //标题栏显示当前城市
+    private TextView mCity;
+    //记录起点和终点
+    private LocationInfo mStartLocation;
+    private LocationInfo mEndLocation;
 
 
     @Override
@@ -86,6 +101,12 @@ public class MainActivity extends AppCompatActivity implements IMainView{
                 //首次定位，添加当前位置的标记
                 mLbsLayer.addOrUpdateMarker(locationInfo,
                         BitmapFactory.decodeResource(getResources(),R.drawable.start));
+                //记录起点
+                mStartLocation=locationInfo;
+                //设置标题
+                mCity.setText(mLbsLayer.getCity());
+                //设置起点
+                mStartEdit.setText(locationInfo.getName());
                 //获取附近司机
                 getNearDrivers(locationInfo.getLatitude(),locationInfo.getLongitude());
                 //上报当前位置
@@ -93,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements IMainView{
 
             }
         });
-        ViewGroup mapViewContainer= (ViewGroup) findViewById(R.id.activity_main);
+        ViewGroup mapViewContainer= (ViewGroup) findViewById(R.id.map_container);
         mapViewContainer.addView(mLbsLayer.getMapView());
 
         //推送服务 初始化BmobSDK
@@ -104,6 +125,50 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         mPushKey=installation.getInstallationId();
         //启动推送服务
         BmobPush.startWork(this);
+        //初始化其他视图元素
+        initViews();
+    }
+
+    private void initViews() {
+        mStartEdit= (AutoCompleteTextView) findViewById(R.id.start);
+        mEndEdit= (AutoCompleteTextView) findViewById(R.id.end);
+        mCity= (TextView) findViewById(R.id.city);
+        mEndEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //关键搜索推荐地点
+                mLbsLayer.poiSearch(s.toString(), new ILbsLayer.OnSearchedListener() {
+                    @Override
+                    public void onSearched(List<LocationInfo> results) {
+                        //更新列表
+                        updatePoiList(results);
+                    }
+
+                    @Override
+                    public void onError(int rCode) {
+
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 更新POI列表
+     * @param results
+     */
+    private void updatePoiList(List<LocationInfo> results) {
+
     }
 
     /**
