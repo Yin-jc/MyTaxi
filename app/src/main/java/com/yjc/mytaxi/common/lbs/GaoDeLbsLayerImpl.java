@@ -36,7 +36,7 @@ import java.util.Map;
 
 public class GaoDeLbsLayerImpl implements ILbsLayer {
     private static final String TAG="GaoDeLbsLayerImpl";
-    private static final int KEY_MY_MARKERE=1000;
+    private static final String KEY_MY_MARKERE="1000";
     private Context mContext;
     //地图视图对象
     private MapView mapView;
@@ -52,7 +52,7 @@ public class GaoDeLbsLayerImpl implements ILbsLayer {
     private CommonLocationChangeListener mLocationChangeListener;
     private MyLocationStyle mMyLocationStyle;
     //管理地图标记集合
-    private Map<Integer,Marker> markerMap=new HashMap<>();
+    private Map<String,Marker> markerMap=new HashMap<>();
 
     public GaoDeLbsLayerImpl(Context context) {
         mContext = context;
@@ -97,7 +97,7 @@ public class GaoDeLbsLayerImpl implements ILbsLayer {
 
     @Override
     public void addOrUpdateMarker(LocationInfo locationInfo, Bitmap bitmap) {
-        Marker storedMarker=markerMap.get(locationInfo.getId());
+        Marker storedMarker=markerMap.get(locationInfo.getKey());
         LatLng latLng=new LatLng(locationInfo.getLatitude(),
                 locationInfo.getLongtitude());
         if(storedMarker!=null){
@@ -115,8 +115,8 @@ public class GaoDeLbsLayerImpl implements ILbsLayer {
             options.position(latLng);
             Marker marker=aMap.addMarker(options);
             marker.setRotateAngle(locationInfo.getRotation());
-            markerMap.put(locationInfo.getId(),marker);
-            if(locationInfo.getId()==KEY_MY_MARKERE){
+            markerMap.put(locationInfo.getKey(),marker);
+            if(locationInfo.getKey().equals(KEY_MY_MARKERE)){
                 //传感器控制我的位置标记旋转角度
                 mSensorHelper.setCurrentMarker(marker);
             }
@@ -173,7 +173,7 @@ public class GaoDeLbsLayerImpl implements ILbsLayer {
                     LocationInfo locationInfo=new LocationInfo(
                             aMapLocation.getLatitude(),aMapLocation.getLongitude());
                     locationInfo.setName(aMapLocation.getPoiName());
-                    locationInfo.setId(KEY_MY_MARKERE);
+                    locationInfo.setKey(KEY_MY_MARKERE);
                     //第一次定位
                     if(mFirst){
                         mFirst=false;

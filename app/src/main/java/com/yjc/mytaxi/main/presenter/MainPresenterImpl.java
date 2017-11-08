@@ -7,6 +7,9 @@ import com.yjc.mytaxi.account.model.IAccountManager;
 import com.yjc.mytaxi.account.model.LoginResponse;
 import com.yjc.mytaxi.account.presenter.CreatePasswordDialogPresenterImpl;
 import com.yjc.mytaxi.common.dataBus.RegisterBus;
+import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
+import com.yjc.mytaxi.main.model.IMainManager;
+import com.yjc.mytaxi.main.model.NearDriverResponse;
 import com.yjc.mytaxi.main.view.IMainView;
 
 import java.lang.ref.WeakReference;
@@ -19,10 +22,13 @@ public class MainPresenterImpl implements IMainPresenter {
 
     private IMainView view;
     private IAccountManager accountManager;
+    private IMainManager mainManager;
 
-    public MainPresenterImpl(IMainView view, IAccountManager accountManager) {
+    public MainPresenterImpl(IMainView view, IAccountManager accountManager,
+                             IMainManager mainManager) {
         this.view = view;
         this.accountManager = accountManager;
+        this.mainManager=mainManager;
     }
 
     @RegisterBus
@@ -39,8 +45,20 @@ public class MainPresenterImpl implements IMainPresenter {
                 break;
         }
     }
+
+    @RegisterBus
+    public void onNearDriversResponse(NearDriverResponse response){
+        if(response.getCode()== BaseBizResponse.STATE_OK){
+            view.showNears(response.getData());
+        }
+    }
     @Override
     public void loginByToken() {
         accountManager.loginByToken();
+    }
+
+    @Override
+    public void fetchNearDrivers(double latitude, double longtitude) {
+        mainManager.fetchNearDrivers(latitude,longtitude);
     }
 }

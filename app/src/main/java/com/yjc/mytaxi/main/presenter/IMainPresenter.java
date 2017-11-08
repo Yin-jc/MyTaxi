@@ -6,4 +6,6 @@ package com.yjc.mytaxi.main.presenter;
 
 public interface IMainPresenter {
     void loginByToken();
+
+    void fetchNearDrivers(double latitude, double longtitude);
 }

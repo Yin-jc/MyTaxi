@@ -4,6 +4,7 @@ package com.yjc.mytaxi.main.view;
  * Created by Administrator on 2017/11/1/001.
  */
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,8 +25,12 @@ import com.yjc.mytaxi.common.lbs.ILbsLayer;
 import com.yjc.mytaxi.common.lbs.LocationInfo;
 import com.yjc.mytaxi.common.storage.SharedPreferenceDao;
 import com.yjc.mytaxi.common.util.ToastUtil;
+import com.yjc.mytaxi.main.model.IMainManager;
+import com.yjc.mytaxi.main.model.MainManagerImpl;
 import com.yjc.mytaxi.main.presenter.IMainPresenter;
 import com.yjc.mytaxi.main.presenter.MainPresenterImpl;
+
+import java.util.List;
 
 /**
  * 检查本地记录
@@ -35,12 +40,15 @@ import com.yjc.mytaxi.main.presenter.MainPresenterImpl;
  * 地图接入
  * 定位自己位置，显示蓝点
  * 使用Maker标记当前位置和方向
+ * 地图封装
+ * 获取附近司机
  */
 public class MainActivity extends AppCompatActivity implements IMainView{
 
     private static final String TAG="MainActivity";
     private IMainPresenter mPresenter;
     private ILbsLayer mLbsLayer;
+    private Bitmap mDriverBit;
 
 
     @Override
@@ -51,7 +59,8 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         SharedPreferenceDao dao=new SharedPreferenceDao(MyTaxiApplication.getInstance(),
                 SharedPreferenceDao.FILE_ACCOUNT);
         IAccountManager manager=new AccountManagerImpl(httpClient,dao);
-        mPresenter=new MainPresenterImpl(this,manager);
+        IMainManager mainManager=new MainManagerImpl(httpClient);
+        mPresenter=new MainPresenterImpl(this,manager,mainManager);
         mPresenter.loginByToken();
 
         //注册 Presenter
@@ -64,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements IMainView{
             @Override
             public void onLocationChange(LocationInfo locationInfo) {
                 Log.d(TAG,"onLocationChange");
+                showNears();
             }
 
             @Override
@@ -71,11 +81,22 @@ public class MainActivity extends AppCompatActivity implements IMainView{
                 //首次定位，添加当前位置的标记
                 mLbsLayer.addOrUpdateMarker(locationInfo,
                         BitmapFactory.decodeResource(getResources(),R.drawable.start));
+                //获取附近司机
+                getNearDrivers(locationInfo.getLatitude(),locationInfo.getLongtitude());
 
             }
         });
         ViewGroup mapViewContainer= (ViewGroup) findViewById(R.id.activity_main);
         mapViewContainer.addView(mLbsLayer.getMapView());
+    }
+
+    /**
+     * 获取附近的司机
+     * @param latitude
+     * @param longtitude
+     */
+    private void getNearDrivers(double latitude, double longtitude) {
+        mPresenter.fetchNearDrivers(latitude,longtitude);
     }
 
 
@@ -108,6 +129,16 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     @Override
     public void showLoginSuc() {
         ToastUtil.show(this,getString(R.string.login_suc));
+    }
+
+    @Override
+    public void showNears(List<LocationInfo> data) {
+        if(mDriverBit==null || mDriverBit.isRecycled()){
+            mDriverBit=BitmapFactory.decodeResource(getResources(),R.drawable.car);
+        }
+        for (LocationInfo locationInfo:data){
+            mLbsLayer.addOrUpdateMarker(locationInfo,mDriverBit);
+        }
     }
 
     /**

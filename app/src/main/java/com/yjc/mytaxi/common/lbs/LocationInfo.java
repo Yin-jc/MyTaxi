@@ -5,7 +5,7 @@ package com.yjc.mytaxi.common.lbs;
  */
 
 public class LocationInfo {
-    private int id;
+    private String key;
     private String name;
     private double latitude;
     private double longtitude;
@@ -16,12 +16,12 @@ public class LocationInfo {
         this.longtitude = longtitude;
     }
 
-    public int getId() {
-        return id;
+    public String getKey() {
+        return key;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getName() {
