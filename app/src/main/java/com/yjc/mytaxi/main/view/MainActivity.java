@@ -12,7 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
@@ -29,6 +31,7 @@ import com.yjc.mytaxi.common.lbs.GaoDeLbsLayerImpl;
 import com.yjc.mytaxi.common.lbs.ILbsLayer;
 import com.yjc.mytaxi.common.lbs.LocationInfo;
 import com.yjc.mytaxi.common.storage.SharedPreferenceDao;
+import com.yjc.mytaxi.common.util.DevUtil;
 import com.yjc.mytaxi.common.util.ToastUtil;
 import com.yjc.mytaxi.main.model.IMainManager;
 import com.yjc.mytaxi.main.model.MainManagerImpl;
@@ -37,6 +40,7 @@ import com.yjc.mytaxi.main.presenter.MainPresenterImpl;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.push.BmobPush;
@@ -167,7 +171,37 @@ public class MainActivity extends AppCompatActivity implements IMainView{
      * 更新POI列表
      * @param results
      */
-    private void updatePoiList(List<LocationInfo> results) {
+    private void updatePoiList(final List<LocationInfo> results) {
+        List<String> listString=new ArrayList<>();
+        for(int i=0;i<results.size();i++){
+            listString.add(results.get(i).getName());
+            if(mEndAdapter==null){
+                mEndAdapter=new PoiAdapter(getApplicationContext(),listString);
+                mEndEdit.setAdapter(mEndAdapter);
+            }else{
+                mEndAdapter.setData(listString);
+            }
+            mEndEdit.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    ToastUtil.show(MainActivity.this,results.get(position).getName());
+                    DevUtil.closeInputMethod(MainActivity.this);
+                    //记录终点
+                    mEndLocation=results.get(position);
+                    //绘制路径
+                    showRoute(mStartLocation,mEndLocation);
+                }
+            });
+            mEndAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 绘制起点终点路径
+     * @param mStartLocation
+     * @param mEndLocation
+     */
+    private void showRoute(LocationInfo mStartLocation, LocationInfo mEndLocation) {
 
     }
 
