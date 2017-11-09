@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.yjc.mytaxi.MyTaxiApplication;
@@ -79,6 +81,17 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     private LocationInfo mEndLocation;
     private Bitmap mStartBit;
     private Bitmap mEndBit;
+    //操作状态相关元素
+    private View mOptArea;
+    private View mLoadingArea;
+    private TextView mTips;
+    private TextView mLoadingText;
+    private Button mBtnCall;
+    private Button mBtnCancel;
+    private Button mBtnPay;
+    private float mCost;
+    //判断当前是否已经登录
+    private boolean mIsLogin;
 
 
     @Override
@@ -142,6 +155,13 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         mStartEdit= (AutoCompleteTextView) findViewById(R.id.start);
         mEndEdit= (AutoCompleteTextView) findViewById(R.id.end);
         mCity= (TextView) findViewById(R.id.city);
+//        mOptArea = findViewById(R.id.optArea);
+        mLoadingArea = findViewById(R.id.loading_area);
+        mLoadingText = (TextView) findViewById(R.id.loading_text);
+        mBtnCall = (Button) findViewById(R.id.btn_call_driver);
+        mBtnCancel = (Button) findViewById(R.id.btn_cancel);
+        mBtnPay = (Button) findViewById(R.id.btn_pay);
+        mTips = (TextView) findViewById(R.id.tips_info);
         mEndEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -170,6 +190,50 @@ public class MainActivity extends AppCompatActivity implements IMainView{
                 });
             }
         });
+        View.OnClickListener listener=new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()){
+                    case R.id.btn_call_driver:
+                        //呼叫司机
+                        callDriver();
+                        break;
+                    case R.id.btn_cancel:
+                        // TODO: 2017/11/9/009 取消呼叫 
+                        break;
+                    case R.id.btn_pay:
+                        // TODO: 2017/11/9/009 支付 
+                        break;
+                }
+            }
+        };
+        mBtnCall.setOnClickListener(listener);
+        mBtnCancel.setOnClickListener(listener);
+        mBtnPay.setOnClickListener(listener);
+    }
+
+    /**
+     * 呼叫司机
+     */
+    private void callDriver() {
+        if(mIsLogin){
+            //已登录，直接呼叫
+            showCalling();
+            // 请求呼叫
+            mPresenter.callDriver(mPushKey,mCost,mStartLocation,mEndLocation);
+        }else {
+            //未登录，先登录
+            mPresenter.loginByToken();
+            ToastUtil.show(this,"请先登录");
+        }
+    }
+
+    private void showCalling() {
+        mTips.setVisibility(View.GONE);
+        mLoadingArea.setVisibility(View.VISIBLE);
+        mLoadingText.setText(R.string.calling_driver);
+        mBtnCall.setEnabled(false);
+        mBtnCancel.setEnabled(true);
     }
 
     /**
@@ -217,8 +281,19 @@ public class MainActivity extends AppCompatActivity implements IMainView{
                         LogUtil.d(TAG,"driveRoute:"+result);
 
                         mLbsLayer.moveCamera(mStartLocation,mEndLocation);
+                        //显示操作区
+                        showOptArea();
+                        mCost=result.getTaxiCost();
+                        String infoString=getString(R.string.route_info);
+                        infoString= String.format(infoString,
+                                (int)result.getDistance(),mCost,result.getDuration());
+                        mTips.setVisibility(View.VISIBLE);
+                        mTips.setText(infoString);
                     }
                 });
+    }
+
+    private void showOptArea() {
     }
 
     private void addEndMarker() {
@@ -300,6 +375,26 @@ public class MainActivity extends AppCompatActivity implements IMainView{
             mDriverBit=BitmapFactory.decodeResource(getResources(),R.drawable.car);
         }
         mLbsLayer.addOrUpdateMarker(locationInfo,mDriverBit);
+    }
+
+    /**
+     * 呼叫司机成功
+     */
+    @Override
+    public void showCallDriverSuc() {
+        mLoadingArea.setVisibility(View.GONE);
+        mTips.setVisibility(View.VISIBLE);
+        mTips.setText(getString(R.string.show_call_suc));
+    }
+
+    /**
+     * 呼叫司机失败
+     */
+    @Override
+    public void showCallDriverFail() {
+        mLoadingArea.setVisibility(View.GONE);
+        mTips.setVisibility(View.VISIBLE);
+        mTips.setText(getString(R.string.show_call_fail));
     }
 
     /**

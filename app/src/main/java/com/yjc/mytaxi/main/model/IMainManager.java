@@ -7,7 +7,10 @@ import com.yjc.mytaxi.common.lbs.LocationInfo;
  */
 
 public interface IMainManager {
+
     void fetchNearDrivers(double latitude, double longtitude);
 
     void updateLocationToServer(LocationInfo locationInfo);
+
+    void callDriver(String pushKey, float cost, LocationInfo startLocation, LocationInfo endLocation);
 }

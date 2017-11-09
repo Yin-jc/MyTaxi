@@ -3,6 +3,9 @@ package com.yjc.mytaxi.main.model;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.internal.Streams;
+import com.yjc.mytaxi.MyTaxiApplication;
+import com.yjc.mytaxi.account.model.Account;
 import com.yjc.mytaxi.common.dataBus.RxBus;
 import com.yjc.mytaxi.common.http.IHttpClient;
 import com.yjc.mytaxi.common.http.IRequest;
@@ -12,6 +15,7 @@ import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
 import com.yjc.mytaxi.common.http.impl.BaseRequest;
 import com.yjc.mytaxi.common.lbs.LocationInfo;
 
+import com.yjc.mytaxi.common.storage.SharedPreferenceDao;
 import com.yjc.mytaxi.common.util.LogUtil;
 import rx.functions.Func1;
 
@@ -72,6 +76,50 @@ public class MainManagerImpl implements IMainManager{
                     LogUtil.d(TAG,"位置上报失败");
                 }
                 return response;//NullPointerException
+            }
+        });
+    }
+
+    @Override
+    public void callDriver(final String pushKey, final float cost, final LocationInfo startLocation, final LocationInfo endLocation) {
+        RxBus.getInstance().chainProcess(new Func1() {
+            @Override
+            public Object call(Object o) {
+                SharedPreferenceDao sharedPreferenceDao=
+                        new SharedPreferenceDao(MyTaxiApplication.getInstance(),
+                                SharedPreferenceDao.FILE_ACCOUNT);
+                Account account= (Account) sharedPreferenceDao.get(SharedPreferenceDao.KEY_ACCOUNT,
+                        Account.class);
+                String uid=account.getUid();
+                String phone=account.getAccount();
+                IRequest request=new BaseRequest(API.Config.getDomain()+
+                    API.CALL_DRIVER);
+                request.setBody("key",pushKey);
+                request.setBody("uid",uid);
+                request.setBody("phone",phone);
+                request.setBody("startLatitude", String.valueOf(
+                        startLocation.getLatitude()
+                ));
+                request.setBody("startLongitude",String.valueOf(
+                        startLocation.getLongitude()
+                ));
+                request.setBody("endLatitude", String.valueOf(
+                        endLocation.getLatitude()
+                ));
+                request.setBody("endLongitude",String.valueOf(
+                        endLocation.getLongitude()
+                ));
+                request.setBody("cost",String.valueOf(cost));
+
+                IResponse response=mHttpClient.post(request,false);
+                OrderStateOptResponse orderStateOptResponse=
+                        new OrderStateOptResponse();
+                orderStateOptResponse.setCode(response.getCode());
+                orderStateOptResponse.setState(OrderStateOptResponse.
+                        ORDER_STATE_CREATE);
+                LogUtil.d(TAG,"call driver:"+response.getData());
+                LogUtil.d(TAG,"call driver phone:"+phone);
+                return orderStateOptResponse;
             }
         });
     }

@@ -11,6 +11,7 @@ import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
 import com.yjc.mytaxi.common.lbs.LocationInfo;
 import com.yjc.mytaxi.main.model.IMainManager;
 import com.yjc.mytaxi.main.model.NearDriverResponse;
+import com.yjc.mytaxi.main.model.OrderStateOptResponse;
 import com.yjc.mytaxi.main.view.IMainView;
 
 import java.lang.ref.WeakReference;
@@ -58,6 +59,18 @@ public class MainPresenterImpl implements IMainPresenter {
     public void onLocationInfo(LocationInfo locationInfo){
         view.showLocationChange(locationInfo);
     }
+
+    @RegisterBus
+    public void onOrderStateOptResponse(OrderStateOptResponse response){
+        if(response.getState()==OrderStateOptResponse.ORDER_STATE_CREATE){
+            //呼叫司机
+            if(response.getCode()==BaseBizResponse.STATE_OK){
+                view.showCallDriverSuc();
+            }else {
+                view.showCallDriverFail();
+            }
+        }
+    }
     @Override
     public void loginByToken() {
         accountManager.loginByToken();
@@ -71,5 +84,10 @@ public class MainPresenterImpl implements IMainPresenter {
     @Override
     public void updateLocationToServer(LocationInfo locationInfo) {
         mainManager.updateLocationToServer(locationInfo);
+    }
+
+    @Override
+    public void callDriver(String pushKey, float cost, LocationInfo startLocation, LocationInfo endLocation) {
+        mainManager.callDriver(pushKey,cost,startLocation,endLocation);
     }
 }

@@ -23,4 +23,14 @@ public interface IMainView extends IView{
      * @param locationInfo
      */
     void showLocationChange(LocationInfo locationInfo);
+
+    /**
+     * 显示呼叫司机成功
+     */
+    void showCallDriverSuc();
+
+    /**
+     * 显示呼叫司机失败
+     */
+    void showCallDriverFail();
 }
