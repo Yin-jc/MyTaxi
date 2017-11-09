@@ -1,6 +1,7 @@
 package com.yjc.mytaxi.common.lbs;
 
 import android.graphics.Bitmap;
+import android.media.MediaRouter;
 import android.os.Bundle;
 import android.view.View;
 
@@ -58,7 +59,26 @@ public interface ILbsLayer {
     void onSaveInstanceState(Bundle outState);
     void onPause();
     void onDestroy();
- 
+
+    /**
+     * 绘制两点之间行车路径
+     * @param start
+     * @param end
+     * @param color
+     * @param listener
+     */
+    void driveRoute(LocationInfo start,LocationInfo end,int color,
+                    OnRouteCompleteListener listener);
+
+    void clearAllMarkers();
+
+    /**
+     * 移动相机到两点之间的视野范围
+     * @param mStartLocation
+     * @param mEndLocation
+     */
+    void moveCamera(LocationInfo mStartLocation, LocationInfo mEndLocation);
+
     interface CommonLocationChangeListener{
         void onLocationChange(LocationInfo locationInfo);
         //第一次定位回调
@@ -71,5 +91,12 @@ public interface ILbsLayer {
     interface OnSearchedListener{
         void onSearched(List<LocationInfo> results);
         void onError(int rCode);
+    }
+
+    /**
+     * 路径规划完成监听
+     */
+    interface OnRouteCompleteListener {
+        void onComplete(RouteInfo result);
     }
 }

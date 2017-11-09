@@ -6,6 +6,7 @@ package com.yjc.mytaxi.main.view;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -30,8 +31,10 @@ import com.yjc.mytaxi.common.http.impl.OkHttpClientImpl;
 import com.yjc.mytaxi.common.lbs.GaoDeLbsLayerImpl;
 import com.yjc.mytaxi.common.lbs.ILbsLayer;
 import com.yjc.mytaxi.common.lbs.LocationInfo;
+import com.yjc.mytaxi.common.lbs.RouteInfo;
 import com.yjc.mytaxi.common.storage.SharedPreferenceDao;
 import com.yjc.mytaxi.common.util.DevUtil;
+import com.yjc.mytaxi.common.util.LogUtil;
 import com.yjc.mytaxi.common.util.ToastUtil;
 import com.yjc.mytaxi.main.model.IMainManager;
 import com.yjc.mytaxi.main.model.MainManagerImpl;
@@ -74,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     //记录起点和终点
     private LocationInfo mStartLocation;
     private LocationInfo mEndLocation;
+    private Bitmap mStartBit;
+    private Bitmap mEndBit;
 
 
     @Override
@@ -201,8 +206,35 @@ public class MainActivity extends AppCompatActivity implements IMainView{
      * @param mStartLocation
      * @param mEndLocation
      */
-    private void showRoute(LocationInfo mStartLocation, LocationInfo mEndLocation) {
+    private void showRoute(final LocationInfo mStartLocation, final LocationInfo mEndLocation) {
+        mLbsLayer.clearAllMarkers();
+        addStartMarker();
+        addEndMarker();
+        mLbsLayer.driveRoute(mStartLocation, mEndLocation, Color.GREEN,
+                new ILbsLayer.OnRouteCompleteListener() {
+                    @Override
+                    public void onComplete(RouteInfo result) {
+                        LogUtil.d(TAG,"driveRoute:"+result);
 
+                        mLbsLayer.moveCamera(mStartLocation,mEndLocation);
+                    }
+                });
+    }
+
+    private void addEndMarker() {
+        if(mEndBit==null || mEndBit.isRecycled()){
+            mEndBit=BitmapFactory.decodeResource(getResources(),
+                    R.drawable.end);
+        }
+        mLbsLayer.addOrUpdateMarker(mEndLocation,mEndBit);
+    }
+
+    private void addStartMarker() {
+        if(mStartBit==null || mStartBit.isRecycled()){
+            mStartBit=BitmapFactory.decodeResource(getResources(),
+                    R.drawable.start);
+        }
+        mLbsLayer.addOrUpdateMarker(mStartLocation,mStartBit);
     }
 
     /**
