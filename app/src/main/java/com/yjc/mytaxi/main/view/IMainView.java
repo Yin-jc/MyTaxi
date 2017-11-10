@@ -27,8 +27,9 @@ public interface IMainView extends IView{
 
     /**
      * 显示呼叫司机成功
+     * @param order
      */
-    void showCallDriverSuc();
+    void showCallDriverSuc(Order order);
 
     /**
      * 显示呼叫司机失败

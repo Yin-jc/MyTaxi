@@ -81,9 +81,9 @@ public class MainPresenterImpl implements IMainPresenter {
         if(response.getState()==OrderStateOptResponse.ORDER_STATE_CREATE){
             //呼叫司机
             if(response.getCode()==BaseBizResponse.STATE_OK){
-                view.showCallDriverSuc();
                 //保存当前订单
                 mCurrentOrder=response.getData();
+                view.showCallDriverSuc(mCurrentOrder);
             }else {
                 view.showCallDriverFail();
             }
@@ -155,5 +155,10 @@ public class MainPresenterImpl implements IMainPresenter {
         if(mCurrentOrder!=null){
             mainManager.pay(mCurrentOrder.getOrderId());
         }
+    }
+
+    @Override
+    public void getProcessingOrder() {
+        mainManager.getProcessingOrder();
     }
 }

@@ -60,4 +60,5 @@
     <string name="driving_info">司机：%1$s(车牌:%2$s)，行程中,还剩%3$.2f公里，%4$d分钟到达</string>
     <string name="paying">支付中...</string>
     <string name="pay_fail">支付失败</string>
+    <string name="route_info_calling">正在呼叫，全程%1$d公里，预计%2$.2f元，%3$d分钟到达</string>
 </resources>

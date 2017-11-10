@@ -13,11 +13,29 @@ public class Order {
     private String phone;
     private double driverLatitude;
     private double driverLongitude;
+    private double endLatitude;
+    private double endLongitude;
     private double driverRotation;
     private String name;
     private String carNo;
     private String startAddr;
     private String endAddr;
+
+    public double getEndLatitude() {
+        return endLatitude;
+    }
+
+    public void setEndLatitude(double endLatitude) {
+        this.endLatitude = endLatitude;
+    }
+
+    public double getEndLongitude() {
+        return endLongitude;
+    }
+
+    public void setEndLongitude(double endLongitude) {
+        this.endLongitude = endLongitude;
+    }
 
     public float getCost() {
         return cost;

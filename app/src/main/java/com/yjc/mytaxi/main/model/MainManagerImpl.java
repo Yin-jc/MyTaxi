@@ -167,4 +167,36 @@ public class MainManagerImpl implements IMainManager{
             }
         });
     }
+
+    @Override
+    public void getProcessingOrder() {
+        RxBus.getInstance().chainProcess(new Func1() {
+            @Override
+            public Object call(Object o) {
+                SharedPreferenceDao sharedPreferenceDao=
+                        new SharedPreferenceDao(MyTaxiApplication.getInstance(),
+                                SharedPreferenceDao.FILE_ACCOUNT);
+                Account account= (Account) sharedPreferenceDao.get(SharedPreferenceDao.KEY_ACCOUNT,
+                        Account.class);
+                String uid=account.getUid();
+                IRequest request=new BaseRequest(API.Config.getDomain()+
+                        API.GET_PROCESSING_ORDER);
+                request.setBody("uid",uid);
+                IResponse response=mHttpClient.get(request,false);
+                LogUtil.d(TAG,"getProcessingOrder order:"+response.getData());
+                if(response.getCode()==BaseBizResponse.STATE_OK){
+                    //解析订单
+                    OrderStateOptResponse orderStateOptResponse=
+                            new Gson().fromJson(response.getData(),
+                                    OrderStateOptResponse.class);
+                    orderStateOptResponse.setCode(response.getCode());
+                    orderStateOptResponse.setState(orderStateOptResponse.getData().getState());
+                    LogUtil.d(TAG,"getProcessingOrder order state="+orderStateOptResponse);
+                    return orderStateOptResponse;
+                }
+                return null;
+            }
+        });
+
+    }
 }

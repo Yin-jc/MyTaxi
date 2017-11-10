@@ -17,4 +17,6 @@ public interface IMainManager {
     void cancelOrder(String orderId);
 
     void pay(String orderId);
+
+    void getProcessingOrder();
 }
