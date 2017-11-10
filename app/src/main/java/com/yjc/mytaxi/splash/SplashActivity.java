@@ -17,6 +17,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        // TODO: 2017/11/10/010 动态获取权限
         //API>=21
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
             final AnimatedVectorDrawable anim= (AnimatedVectorDrawable) getResources().getDrawable(R.drawable.anim);

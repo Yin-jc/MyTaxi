@@ -20,9 +20,7 @@ import okhttp3.Response;
 
 public class OkHttpClientImpl implements IHttpClient{
 
-    OkHttpClient mOkHttpClient=new OkHttpClient.Builder()
-            .build();
-
+    OkHttpClient mOkHttpClient=new OkHttpClient.Builder().build();
 
     @Override
     public IResponse get(IRequest request, boolean forceCache) {
@@ -41,6 +39,7 @@ public class OkHttpClientImpl implements IHttpClient{
         //获取url
         String url=request.getUrl();
         builder.url(url).get();
+        //建造者模式组装request
         Request okRequest=builder.build();
         return execute(okRequest);
     }

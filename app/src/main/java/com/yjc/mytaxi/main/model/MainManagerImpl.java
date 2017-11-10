@@ -3,9 +3,8 @@ package com.yjc.mytaxi.main.model;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.internal.Streams;
 import com.yjc.mytaxi.MyTaxiApplication;
-import com.yjc.mytaxi.account.model.Account;
+import com.yjc.mytaxi.account.model.bean.Account;
 import com.yjc.mytaxi.common.dataBus.RxBus;
 import com.yjc.mytaxi.common.http.IHttpClient;
 import com.yjc.mytaxi.common.http.IRequest;
@@ -17,6 +16,9 @@ import com.yjc.mytaxi.common.lbs.LocationInfo;
 
 import com.yjc.mytaxi.common.storage.SharedPreferenceDao;
 import com.yjc.mytaxi.common.util.LogUtil;
+import com.yjc.mytaxi.main.model.Response.NearDriverResponse;
+import com.yjc.mytaxi.main.model.Response.OrderStateOptResponse;
+
 import rx.functions.Func1;
 
 /**
@@ -75,7 +77,7 @@ public class MainManagerImpl implements IMainManager{
                 }else{
                     LogUtil.d(TAG,"位置上报失败");
                 }
-                return response;//NullPointerException
+                return null;//NullPointerException
             }
         });
     }

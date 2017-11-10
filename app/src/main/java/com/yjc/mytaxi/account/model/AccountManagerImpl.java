@@ -1,10 +1,11 @@
 package com.yjc.mytaxi.account.model;
 
-import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.yjc.mytaxi.MyTaxiApplication;
+import com.yjc.mytaxi.account.model.bean.Account;
+import com.yjc.mytaxi.account.model.response.LoginResponse;
 import com.yjc.mytaxi.common.dataBus.RxBus;
 import com.yjc.mytaxi.common.http.IHttpClient;
 import com.yjc.mytaxi.common.http.IRequest;
@@ -15,6 +16,7 @@ import com.yjc.mytaxi.common.http.impl.BaseRequest;
 import com.yjc.mytaxi.common.http.impl.BaseResponse;
 import com.yjc.mytaxi.common.storage.SharedPreferenceDao;
 import com.yjc.mytaxi.common.util.DevUtil;
+import com.yjc.mytaxi.common.util.LogUtil;
 
 import rx.functions.Func1;
 
@@ -23,7 +25,10 @@ import rx.functions.Func1;
  */
 
 public class AccountManagerImpl implements IAccountManager {
+
     private static final String TAG="AccountManagerImpl";
+    //登录是否过期
+    private boolean tokenValid=false;
 
     //网络请求库
     private IHttpClient httpClient;
@@ -35,7 +40,6 @@ public class AccountManagerImpl implements IAccountManager {
         this.httpClient = httpClient;
         this.sharedPreferenceDao = sharedPreferenceDao;
     }
-
 
     /**
      * 获取验证码
@@ -49,8 +53,9 @@ public class AccountManagerImpl implements IAccountManager {
                 String url= API.Config.getDomain()+API.GET_SMS_CODE;
                 IRequest request=new BaseRequest(url);
                 request.setBody("phone",phone);
+
                 IResponse response=httpClient.get(request,false);
-                Log.d(TAG,response.getData());
+                LogUtil.d(TAG,response.getData());
                 BaseBizResponse bizRes=new BaseBizResponse();
                 if(response.getCode()== BaseResponse.STATE_OK){
                     bizRes=new Gson()
@@ -82,8 +87,9 @@ public class AccountManagerImpl implements IAccountManager {
                 IRequest request=new BaseRequest(url);
                 request.setBody("phone",phone);
                 request.setBody("code",smsCode);
+
                 IResponse response=httpClient.get(request,false);
-                Log.d(TAG,response.getData());
+                LogUtil.d(TAG,response.getData());
                 BaseBizResponse bizRes=new BaseBizResponse();
                 if(response.getCode()== BaseResponse.STATE_OK){
                     bizRes=new Gson()
@@ -115,6 +121,7 @@ public class AccountManagerImpl implements IAccountManager {
                 String url= API.Config.getDomain()+API.CHECK_USER_EXIST;
                 IRequest request=new BaseRequest(url);
                 request.setBody("phone",phone);
+
                 IResponse response=httpClient.get(request,false);
                 Log.d(TAG,response.getData());
                 BaseBizResponse bizRes=new BaseBizResponse();
@@ -149,10 +156,10 @@ public class AccountManagerImpl implements IAccountManager {
                 request.setBody("phone",phone);
                 request.setBody("password",password);
                 request.setBody("uid", DevUtil.UUID(MyTaxiApplication.getInstance()));
-                IResponse response=httpClient.get(request,false);
+
+                IResponse response=httpClient.post(request,false);
                 Log.d(TAG,response.getData());
                 BaseBizResponse bizRes=new BaseBizResponse();
-
                 if(response.getCode()== BaseResponse.STATE_OK){
                     bizRes=new Gson()
                             .fromJson(response.getData(),BaseBizResponse.class);
@@ -187,7 +194,6 @@ public class AccountManagerImpl implements IAccountManager {
 
                 IResponse response=httpClient.post(request,false);
                 Log.d(TAG,response.getData());
-
                 LoginResponse loginRes=new LoginResponse();
                 if(response.getCode()== BaseResponse.STATE_OK){
                     loginRes=new Gson().fromJson(response.getData(),LoginResponse.class);
@@ -225,9 +231,6 @@ public class AccountManagerImpl implements IAccountManager {
                         SharedPreferenceDao.FILE_ACCOUNT);
                 Account account= (Account) dao.get(SharedPreferenceDao.KEY_ACCOUNT,Account.class);
 
-                //登录是否过期
-                boolean tokenValid=false;
-
                 // 检查token是否过期
                 if(account!=null){
                     if(Long.parseLong(account.getExpired()) > System.currentTimeMillis()){
@@ -250,7 +253,6 @@ public class AccountManagerImpl implements IAccountManager {
 
                     IResponse response=httpClient.post(request,false);
                     Log.d(TAG,response.getData());
-
                     if(response.getCode()== BaseResponse.STATE_OK){
                         loginRes=new Gson().fromJson(response.getData(),LoginResponse.class);
                         if(loginRes.getCode()== BaseBizResponse.STATE_OK) {
@@ -262,6 +264,7 @@ public class AccountManagerImpl implements IAccountManager {
                             dao.save(SharedPreferenceDao.KEY_ACCOUNT, account);
                             loginRes.setCode(LOGIN_SUC);
                         }
+                        //token过期
                         if(loginRes.getCode()==BaseBizResponse.STATE_TOKEN_INVALID){
                             loginRes.setCode(TOKEN_INVALID);
                         }

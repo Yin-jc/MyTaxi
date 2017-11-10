@@ -95,6 +95,14 @@ public class GaoDeLbsLayerImpl implements ILbsLayer {
     }
 
     @Override
+    public void onCreate(Bundle state) {
+        mapView.onCreate(state);
+        //设置当前位置的图标
+        setLocationRes(R.drawable.location_marker);
+        setUpMap();
+    }
+
+    @Override
     public View getMapView() {
         return mapView;
     }
@@ -181,14 +189,6 @@ public class GaoDeLbsLayerImpl implements ILbsLayer {
                 }
             });
         }
-    }
-
-    @Override
-    public void onCreate(Bundle state) {
-        mapView.onCreate(state);
-        //设置当前位置的图标
-        setLocationRes(R.drawable.location_marker);
-        setUpMap();
     }
 
     private void setUpMap() {
@@ -390,7 +390,7 @@ public class GaoDeLbsLayerImpl implements ILbsLayer {
                     .include(endLatLng1)
                     .build();
             //第二个参数为padding
-            aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,100));;
+            aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,100));
         }catch (Exception e){
             LogUtil.d(TAG,"moveCamera:"+e.getMessage());
         }

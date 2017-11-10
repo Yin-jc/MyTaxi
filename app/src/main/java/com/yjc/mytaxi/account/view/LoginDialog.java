@@ -3,41 +3,26 @@ package com.yjc.mytaxi.account.view;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.yjc.mytaxi.MyTaxiApplication;
 import com.yjc.mytaxi.R;
-import com.yjc.mytaxi.account.model.Account;
 import com.yjc.mytaxi.account.model.AccountManagerImpl;
 import com.yjc.mytaxi.account.model.IAccountManager;
-import com.yjc.mytaxi.account.model.LoginResponse;
 import com.yjc.mytaxi.account.presenter.ILoginDialogPresenter;
 import com.yjc.mytaxi.account.presenter.LoginDialogPresenterImpl;
-import com.yjc.mytaxi.account.presenter.SmsCodeDialogPresenterImpl;
 import com.yjc.mytaxi.common.dataBus.RxBus;
 import com.yjc.mytaxi.common.http.IHttpClient;
-import com.yjc.mytaxi.common.http.IRequest;
-import com.yjc.mytaxi.common.http.IResponse;
-import com.yjc.mytaxi.common.http.api.API;
-import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
-import com.yjc.mytaxi.common.http.impl.BaseRequest;
-import com.yjc.mytaxi.common.http.impl.BaseResponse;
 import com.yjc.mytaxi.common.http.impl.OkHttpClientImpl;
 import com.yjc.mytaxi.common.storage.SharedPreferenceDao;
 import com.yjc.mytaxi.common.util.ToastUtil;
-
-import java.lang.ref.SoftReference;
 
 /**
  * Created by Administrator on 2017/11/7/007.
@@ -74,6 +59,19 @@ public class LoginDialog extends Dialog implements ILoginView{
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LayoutInflater inflater= (LayoutInflater) getContext().
+                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View root=inflater.inflate(R.layout.dialog_login_input,null);
+        setContentView(root);
+        initViews();
+
+        //注册 Presenter
+        RxBus.getInstance().register(mPresenter);
+    }
+
+    @Override
     public void showLoading() {
         showOrHideLoading(true);
     }
@@ -90,27 +88,6 @@ public class LoginDialog extends Dialog implements ILoginView{
         }
     }
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        LayoutInflater inflater= (LayoutInflater) getContext().
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View root=inflater.inflate(R.layout.dialog_login_input,null);
-        setContentView(root);
-        initViews();
-
-        //注册 Presenter
-        RxBus.getInstance().register(mPresenter);
-    }
-
-    @Override
-    public void dismiss() {
-        super.dismiss();
-
-        //注销Presenter
-        RxBus.getInstance().unRegister(mPresenter);
-    }
 
     private void initViews() {
         mPhone=findViewById(R.id.phone);
@@ -187,6 +164,14 @@ public class LoginDialog extends Dialog implements ILoginView{
             mLoading.setVisibility(View.GONE);
             mBtnConfirm.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+
+        //注销Presenter
+        RxBus.getInstance().unRegister(mPresenter);
     }
 
     @Override

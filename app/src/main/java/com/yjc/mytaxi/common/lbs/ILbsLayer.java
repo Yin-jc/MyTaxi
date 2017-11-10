@@ -70,6 +70,9 @@ public interface ILbsLayer {
     void driveRoute(LocationInfo start,LocationInfo end,int color,
                     OnRouteCompleteListener listener);
 
+    /**
+     * 清除所有标记
+     */
     void clearAllMarkers();
 
     /**
@@ -86,13 +89,18 @@ public interface ILbsLayer {
      */
     void moveCameraToPoint(LocationInfo locationInfo, int scale);
 
+    /**
+     * 位置变化监听
+     */
     interface CommonLocationChangeListener{
         void onLocationChange(LocationInfo locationInfo);
         //第一次定位回调
         void onLocation(LocationInfo locationInfo);
     }
 
-    //  POI搜索结果监听器
+    /**
+     * POI搜索结果监听器
+     */
     interface OnSearchedListener{
         void onSearched(List<LocationInfo> results);
         void onError(int rCode);

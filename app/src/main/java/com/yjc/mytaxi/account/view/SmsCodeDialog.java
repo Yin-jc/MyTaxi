@@ -59,11 +59,32 @@ public class SmsCodeDialog extends Dialog implements ISmsCodeDialogView{
         super(context, cancelable, cancelListener);
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LayoutInflater inflater= (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View root =inflater.inflate(R.layout.dialog_smscode_input,null);
+        setContentView(root);
+        mPhoneTV=findViewById(R.id.phone);
+        String template="验证码已发送至%s";
+        mPhoneTV.setText(String.format(template,mPhone));
+        mResentBtn=findViewById(R.id.btn_resent);
+        mVerificationCodeInput=findViewById(R.id.verificationCodeInput);
+        mLoading=findViewById(R.id.loading);
+        mErrorView=findViewById(R.id.error);
+        mErrorView.setVisibility(View.GONE);
+        initListeners();
+        requestSendSmsCode();
+
+        //注册Presenter
+        RxBus.getInstance().register(mPresenter);
+    }
+
     /**
      * 验证码倒计时
      * @param context
      */
-    private CountDownTimer mCountDownTimer=new CountDownTimer(10000,1000) {
+    private CountDownTimer mCountDownTimer=new CountDownTimer(60*1000,1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             mResentBtn.setEnabled(false);
@@ -106,6 +127,10 @@ public class SmsCodeDialog extends Dialog implements ISmsCodeDialogView{
     }
 
 
+    /**
+     * 验证码检查结果UI变化
+     * @param suc
+     */
     @Override
     public void showSmsCodeCheckState(boolean suc) {
         if(!suc){
@@ -121,11 +146,14 @@ public class SmsCodeDialog extends Dialog implements ISmsCodeDialogView{
         }
     }
 
+    /**
+     * 显示用户是否存在
+     * @param exist
+     */
     @Override
     public void showUserExist(boolean exist) {
         mLoading.setVisibility(View.GONE);
         mErrorView.setVisibility(View.GONE);
-        dismiss();
         if(!exist){
             //用户不存在，进入注册
             CreatePasswordDialog dialog=
@@ -136,29 +164,7 @@ public class SmsCodeDialog extends Dialog implements ISmsCodeDialogView{
             LoginDialog dialog=new LoginDialog(getContext(),mPhone);
             dialog.show();
         }
-    }
-
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        LayoutInflater inflater= (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View root =inflater.inflate(R.layout.dialog_smscode_input,null);
-        setContentView(root);
-        mPhoneTV=findViewById(R.id.phone);
-        String template="验证码已发送至%s";
-        mPhoneTV.setText(String.format(template,mPhone));
-        mResentBtn=findViewById(R.id.btn_resent);
-        mVerificationCodeInput=findViewById(R.id.verificationCodeInput);
-        mLoading=findViewById(R.id.loading);
-        mErrorView=findViewById(R.id.error);
-        mErrorView.setVisibility(View.GONE);
-        initListeners();
-        requestSendSmsCode();
-
-        //注册Presenter
-        RxBus.getInstance().register(mPresenter);
+        dismiss();
     }
 
     /**
@@ -166,12 +172,6 @@ public class SmsCodeDialog extends Dialog implements ISmsCodeDialogView{
      */
     private void requestSendSmsCode() {
         mPresenter.requestSendSmsCode(mPhone);
-    }
-
-    @Override
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        mCountDownTimer.cancel();
     }
 
     private void initListeners() {
@@ -225,6 +225,12 @@ public class SmsCodeDialog extends Dialog implements ISmsCodeDialogView{
 
         //注销Presenter
         RxBus.getInstance().unRegister(mPresenter);
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mCountDownTimer.cancel();
     }
 
 }

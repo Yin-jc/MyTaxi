@@ -70,7 +70,7 @@
             </intent-filter>
         </receiver>
 
-        <!-- 第四部中创建的消息接收器，在这里进行注册 -->
+        <!-- 创建的消息接收器，在这里进行注册 -->
         <receiver android:name=".common.push.PushReceiver">
             <intent-filter >
                 <action android:name="cn.bmob.push.action.MESSAGE"/>

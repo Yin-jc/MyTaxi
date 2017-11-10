@@ -3,43 +3,27 @@ package com.yjc.mytaxi.account.view;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.yjc.mytaxi.MyTaxiApplication;
 import com.yjc.mytaxi.R;
-import com.yjc.mytaxi.account.model.Account;
 import com.yjc.mytaxi.account.model.AccountManagerImpl;
 import com.yjc.mytaxi.account.model.IAccountManager;
-import com.yjc.mytaxi.account.model.LoginResponse;
 import com.yjc.mytaxi.account.presenter.CreatePasswordDialogPresenterImpl;
 import com.yjc.mytaxi.account.presenter.ICreatePasswordDialogPresenter;
-import com.yjc.mytaxi.account.presenter.LoginDialogPresenterImpl;
 import com.yjc.mytaxi.common.dataBus.RxBus;
 import com.yjc.mytaxi.common.http.IHttpClient;
-import com.yjc.mytaxi.common.http.IRequest;
-import com.yjc.mytaxi.common.http.IResponse;
-import com.yjc.mytaxi.common.http.api.API;
-import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
-import com.yjc.mytaxi.common.http.impl.BaseRequest;
-import com.yjc.mytaxi.common.http.impl.BaseResponse;
 import com.yjc.mytaxi.common.http.impl.OkHttpClientImpl;
 import com.yjc.mytaxi.common.storage.SharedPreferenceDao;
-import com.yjc.mytaxi.common.util.DevUtil;
 import com.yjc.mytaxi.common.util.ToastUtil;
-
-import java.lang.ref.SoftReference;
 
 /**
  * Created by Administrator on 2017/11/6/006.
@@ -78,10 +62,7 @@ public class CreatePasswordDialog extends Dialog implements ICreatePasswordDialo
         super(context, cancelable, cancelListener);
     }
 
-    @Override
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-    }
+
 
     @Override
     public void showLoading() {
@@ -103,7 +84,7 @@ public class CreatePasswordDialog extends Dialog implements ICreatePasswordDialo
 
 
     /**
-     * 处理注册成功
+     * 显示注册成功
      */
     @Override
     public void showRegisterSuc() {
@@ -113,8 +94,10 @@ public class CreatePasswordDialog extends Dialog implements ICreatePasswordDialo
         mTips.setTextColor(getContext().getResources()
                 .getColor(R.color.color_text_normal));
         mTips.setText(getContext()
-                .getString(R.string.register_suc_and_loging));
-
+                .getString(R.string.register_suc_and_login));
+        // 请求网络，完成自动登录
+        mPresenter.requestLogin(mPhoneStr, mPw.getText().toString());
+        dismiss();
     }
 
     @Override
@@ -164,7 +147,7 @@ public class CreatePasswordDialog extends Dialog implements ICreatePasswordDialo
     }
 
     /**
-     * 检查密码输入
+     * 检查密码输入,不能为空，两次输入要一致
      * @return
      */
     private boolean checkPassword() {
@@ -194,5 +177,9 @@ public class CreatePasswordDialog extends Dialog implements ICreatePasswordDialo
         RxBus.getInstance().unRegister(mPresenter);
     }
 
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+    }
 
 }

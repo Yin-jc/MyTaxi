@@ -1,4 +1,4 @@
-package com.yjc.mytaxi.main.model;
+package com.yjc.mytaxi.main.model.bean;
 
 /**
  * Created by Administrator on 2017/11/10/010.

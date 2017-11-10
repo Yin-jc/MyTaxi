@@ -9,14 +9,14 @@
     <string name="sms_code_send_phone">验证码已经发送至%s</string>
     <string name="resend">重新发送</string>
     <string name="after_time_resend">%d秒后重新发送</string>
-    <string name="create_pw">创建秘密</string>
+    <string name="create_pw">创建密码</string>
     <string name="pls_input_pw">请输入密码</string>
     <string name="confirm">确认</string>
     <string name="pls_input_pw_again">请再次输入密码</string>
     <string name="input_pw">输入密码</string>
     <string name="sending">正在向%s发送短信验证码</string>
     <string name="sms_code_error">验证码错误</string>
-    <string name="register_suc_and_loging">注册成功，正在为您自动登录</string>
+    <string name="register_suc_and_login">注册成功,并自动登录</string>
     <string name="user_exist">用户已经存在</string>
     <string name="password_is_null">密码不能为空</string>
     <string name="password_is_not_equal">两次输入的密码不一样</string>
@@ -61,4 +61,6 @@
     <string name="paying">支付中...</string>
     <string name="pay_fail">支付失败</string>
     <string name="route_info_calling">正在呼叫，全程%1$d公里，预计%2$.2f元，%3$d分钟到达</string>
+    <string name="pls_login">请先登录</string>
+    <string name="driver_accept_order">司机接单了</string>
 </resources>

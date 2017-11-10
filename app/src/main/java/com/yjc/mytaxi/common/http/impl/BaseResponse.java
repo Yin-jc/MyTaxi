@@ -17,6 +17,7 @@ public class BaseResponse implements IResponse {
     public String getData() {
         return data;
     }
+
     public int getCode(){
         return code;
     }

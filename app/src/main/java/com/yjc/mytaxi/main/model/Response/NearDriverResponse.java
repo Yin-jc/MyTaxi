@@ -1,4 +1,4 @@
-package com.yjc.mytaxi.main.model;
+package com.yjc.mytaxi.main.model.Response;
 
 import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
 import com.yjc.mytaxi.common.lbs.LocationInfo;
@@ -10,6 +10,7 @@ import java.util.List;
  */
 
 public class NearDriverResponse extends BaseBizResponse{
+
     List<LocationInfo> data;
 
     public List<LocationInfo> getData() {

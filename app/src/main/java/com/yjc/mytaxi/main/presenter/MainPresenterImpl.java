@@ -1,23 +1,15 @@
 package com.yjc.mytaxi.main.presenter;
 
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-import android.view.View;
-
 import com.yjc.mytaxi.account.model.IAccountManager;
-import com.yjc.mytaxi.account.model.LoginResponse;
-import com.yjc.mytaxi.account.presenter.CreatePasswordDialogPresenterImpl;
+import com.yjc.mytaxi.account.model.response.LoginResponse;
 import com.yjc.mytaxi.common.dataBus.RegisterBus;
 import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
 import com.yjc.mytaxi.common.lbs.LocationInfo;
 import com.yjc.mytaxi.main.model.IMainManager;
-import com.yjc.mytaxi.main.model.NearDriverResponse;
-import com.yjc.mytaxi.main.model.Order;
-import com.yjc.mytaxi.main.model.OrderStateOptResponse;
+import com.yjc.mytaxi.main.model.Response.NearDriverResponse;
+import com.yjc.mytaxi.main.model.bean.Order;
+import com.yjc.mytaxi.main.model.Response.OrderStateOptResponse;
 import com.yjc.mytaxi.main.view.IMainView;
-
-import java.lang.ref.WeakReference;
 
 /**
  * Created by Administrator on 2017/11/7/007.

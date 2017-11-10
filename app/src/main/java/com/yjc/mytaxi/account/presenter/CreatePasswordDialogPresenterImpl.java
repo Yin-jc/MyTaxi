@@ -1,10 +1,6 @@
 package com.yjc.mytaxi.account.presenter;
 
-import android.os.Handler;
-import android.os.Message;
-
 import com.yjc.mytaxi.account.model.IAccountManager;
-import com.yjc.mytaxi.account.model.LoginResponse;
 import com.yjc.mytaxi.account.view.ICreatePasswordDialogView;
 import com.yjc.mytaxi.common.dataBus.RegisterBus;
 import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
@@ -15,6 +11,7 @@ import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
  */
 
 public class CreatePasswordDialogPresenterImpl implements ICreatePasswordDialogPresenter{
+
     private ICreatePasswordDialogView view;
     private IAccountManager accountManager;
 

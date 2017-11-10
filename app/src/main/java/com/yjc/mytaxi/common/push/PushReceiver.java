@@ -5,13 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.yjc.mytaxi.common.dataBus.RxBus;
 import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
 import com.yjc.mytaxi.common.lbs.LocationInfo;
 import com.yjc.mytaxi.common.util.LogUtil;
-import com.yjc.mytaxi.main.model.Order;
-import com.yjc.mytaxi.main.model.OrderStateOptResponse;
+import com.yjc.mytaxi.main.model.bean.Order;
+import com.yjc.mytaxi.main.model.Response.OrderStateOptResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +23,7 @@ import cn.bmob.push.PushConstants;
  */
 
 public class PushReceiver extends BroadcastReceiver {
+    //位置变化
     private static final int MSG_TYPE_LOCATION = 1;
     //订单变化
     private static final int MSG_TYPE_ORDER=2;

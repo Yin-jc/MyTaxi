@@ -1,14 +1,9 @@
 package com.yjc.mytaxi.account.presenter;
 
-import android.os.Handler;
-import android.os.Message;
-
 import com.yjc.mytaxi.account.model.IAccountManager;
-import com.yjc.mytaxi.account.model.LoginResponse;
+import com.yjc.mytaxi.account.model.response.LoginResponse;
 import com.yjc.mytaxi.account.view.ILoginView;
 import com.yjc.mytaxi.common.dataBus.RegisterBus;
-
-import java.lang.ref.WeakReference;
 
 /**
  * Created by Administrator on 2017/11/7/007.

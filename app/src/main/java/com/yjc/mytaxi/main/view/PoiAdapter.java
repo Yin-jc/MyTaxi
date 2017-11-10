@@ -88,7 +88,7 @@ public class PoiAdapter extends ArrayAdapter {
         TextView textView;
     }
 
-    public static interface  OnItemClickListener{
+    public  interface  OnItemClickListener{
         void onItemClick(int id);
     }
 }

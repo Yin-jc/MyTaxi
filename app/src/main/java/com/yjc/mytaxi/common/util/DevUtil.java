@@ -23,7 +23,15 @@ public class DevUtil {
         String deviceId=tm.getDeviceId();
         return deviceId+ System.currentTimeMillis();
     }
+
+    /**
+     * 隐藏软键盘
+     * @param context
+     */
     public static void closeInputMethod(Activity context){
-//        InputMethodManager imm=context.getSystemService();
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(context.getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

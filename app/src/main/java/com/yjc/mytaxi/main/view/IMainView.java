@@ -2,7 +2,7 @@ package com.yjc.mytaxi.main.view;
 
 import com.yjc.mytaxi.account.view.IView;
 import com.yjc.mytaxi.common.lbs.LocationInfo;
-import com.yjc.mytaxi.main.model.Order;
+import com.yjc.mytaxi.main.model.bean.Order;
 
 import java.util.List;
 

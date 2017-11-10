@@ -1,6 +1,7 @@
-package com.yjc.mytaxi.main.model;
+package com.yjc.mytaxi.main.model.Response;
 
 import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
+import com.yjc.mytaxi.main.model.bean.Order;
 
 /**
  * Created by Administrator on 2017/11/9/009.
