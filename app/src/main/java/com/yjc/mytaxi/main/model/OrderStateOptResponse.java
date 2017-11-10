@@ -9,9 +9,11 @@ import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
 
 public class OrderStateOptResponse extends BaseBizResponse{
     //创建订单
-    public static final int ORDER_STATE_CREATE=0;
+    public static final int ORDER_STATE_CREATE= 0;
     //取消订单
-    public static final int ORDER_STATE_CANCEL=-1;
+    public static final int ORDER_STATE_CANCEL= -1;
+    //司机接单
+    public static final int ORDER_STATE_ACCEPT = 1;
 
     private int state;
     //携带操作订单

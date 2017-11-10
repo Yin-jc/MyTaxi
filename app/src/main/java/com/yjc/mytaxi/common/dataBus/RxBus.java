@@ -70,6 +70,9 @@ public class RxBus {
                 .subscribe(new Action1<Object>() {
                     @Override
                     public void call(Object data) {
+                        if(data==null){
+                            return;
+                        }
                         Log.d(TAG,"chainProcess start");
                         send(data);
                     }
@@ -109,9 +112,9 @@ public class RxBus {
      * @param data
      */
     public void send(Object data) {
-        for (Object subsciber:subscribers){
+        for (Object subscriber:subscribers){
             //扫描注解，将数据发送到注册的对象的标记方法
-            callMethodByAnnotation(subsciber,data);
+            callMethodByAnnotation(subscriber,data);
         }
     }
 }

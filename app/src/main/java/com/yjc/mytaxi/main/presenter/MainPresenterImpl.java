@@ -84,6 +84,10 @@ public class MainPresenterImpl implements IMainPresenter {
             }else {
                 view.showCancelFail();
             }
+        }else if(response.getState()==OrderStateOptResponse.ORDER_STATE_ACCEPT){
+            //司机接单
+            mCurrentOrder=response.getData();
+            view.showDriverAcceptOrder(mCurrentOrder);
         }
     }
 

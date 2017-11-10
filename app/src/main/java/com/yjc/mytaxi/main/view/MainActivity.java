@@ -40,6 +40,7 @@ import com.yjc.mytaxi.common.util.LogUtil;
 import com.yjc.mytaxi.common.util.ToastUtil;
 import com.yjc.mytaxi.main.model.IMainManager;
 import com.yjc.mytaxi.main.model.MainManagerImpl;
+import com.yjc.mytaxi.main.model.Order;
 import com.yjc.mytaxi.main.presenter.IMainPresenter;
 import com.yjc.mytaxi.main.presenter.MainPresenterImpl;
 
@@ -448,6 +449,43 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     public void showCancelFail() {
         ToastUtil.show(this,getString(R.string.order_cancel_error));
         mBtnCancel.setEnabled(true);
+    }
+
+    /**
+     * 显示司机接单
+     * @param order
+     */
+    @Override
+    public void showDriverAcceptOrder(final Order order) {
+        ToastUtil.show(this,"司机接单了");
+        //清除地图标记
+        mLbsLayer.clearAllMarkers();
+        //添加司机标记
+        final LocationInfo driverLocation=new LocationInfo(order.getDriverLatitude(),
+                order.getDriverLongitude());
+        showLocationChange(driverLocation);
+        //显示我的位置
+        addLocationMarker();
+        //显示司机到乘客的路径
+        mLbsLayer.driveRoute(driverLocation, mStartLocation,
+                Color.BLUE,
+                new ILbsLayer.OnRouteCompleteListener() {
+                    @Override
+                    public void onComplete(RouteInfo result) {
+                        //地图聚焦司机和我的位置
+                        mLbsLayer.moveCamera(mStartLocation,driverLocation);
+                        //显示司机、路径信息
+                        StringBuilder stringBuilder=new StringBuilder();
+                        stringBuilder.append("司机:")
+                                     .append(order.getName())
+                                     .append(",车牌:")
+                                     .append(order.getCarNo())
+                                     .append(",预计")
+                                     .append(result.getDuration())
+                                     .append("分钟到达");
+                        mTips.setText(stringBuilder.toString());
+                    }
+                });
     }
 
     /**
