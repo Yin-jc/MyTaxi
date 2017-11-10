@@ -84,14 +84,21 @@
                 android:padding="12dp"
                 android:textColor="@color/color_text_normal"/>
         </LinearLayout>
-
     </LinearLayout>
+
+
     <!--操作区-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="64dp"
+        android:padding="12dp"
+        android:background="@color/bg_white"
+        android:id="@+id/optArea"
+        android:visibility="gone">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -100,6 +107,7 @@
             android:id="@+id/tips_info"
             android:visibility="gone"
             android:textColor="@color/color_text_normal"/>
+        <!--状态提示区-->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -118,38 +126,39 @@
                 android:id="@+id/loading_text"
                 android:textColor="@color/color_text_normal"/>
         </LinearLayout>
+        <!--操作按钮-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="16dp"
+            android:weightSum="2">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Dialog.Button"
+                android:text="@string/call"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:id="@+id/btn_call_driver"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Dialog.Button"
+                android:text="@string/cancel"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:id="@+id/btn_cancel"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Dialog.Button"
+                android:text="@string/pay"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:id="@+id/btn_pay"
+                android:visibility="gone"/>
+        </LinearLayout>
     </LinearLayout>
-    <!--操作按钮-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:padding="16dp"
-        android:weightSum="2">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Dialog.Button"
-            android:text="@string/call"
-            android:layout_margin="2dp"
-            android:layout_weight="1"
-            android:id="@+id/btn_call_driver"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Dialog.Button"
-            android:text="@string/cancel"
-            android:layout_margin="2dp"
-            android:layout_weight="1"
-            android:id="@+id/btn_cancel"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Dialog.Button"
-            android:text="@string/pay"
-            android:layout_margin="2dp"
-            android:layout_weight="1"
-            android:id="@+id/btn_pay"
-            android:visibility="gone"/>
-    </LinearLayout>
+
 </RelativeLayout>

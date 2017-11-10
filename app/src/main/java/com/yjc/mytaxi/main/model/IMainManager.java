@@ -13,4 +13,6 @@ public interface IMainManager {
     void updateLocationToServer(LocationInfo locationInfo);
 
     void callDriver(String pushKey, float cost, LocationInfo startLocation, LocationInfo endLocation);
+
+    void cancelOrder(String orderId);
 }

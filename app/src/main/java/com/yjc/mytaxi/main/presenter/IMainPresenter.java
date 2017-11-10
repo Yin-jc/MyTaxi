@@ -31,4 +31,9 @@ public interface IMainPresenter {
      */
     void callDriver(String pushKey, float cost, LocationInfo startLocation,
                     LocationInfo endLocation);
+
+    /**
+     * 取消呼叫
+     */
+    void cancel();
 }

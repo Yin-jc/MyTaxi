@@ -79,13 +79,18 @@ public interface ILbsLayer {
      */
     void moveCamera(LocationInfo mStartLocation, LocationInfo mEndLocation);
 
+    /**
+     * 移动相机到某个点
+     * @param locationInfo
+     * @param scale
+     */
+    void moveCameraToPoint(LocationInfo locationInfo, int scale);
+
     interface CommonLocationChangeListener{
         void onLocationChange(LocationInfo locationInfo);
         //第一次定位回调
         void onLocation(LocationInfo locationInfo);
     }
-
-    // TODO: 2017/11/8/008 路径绘制
 
     //  POI搜索结果监听器
     interface OnSearchedListener{

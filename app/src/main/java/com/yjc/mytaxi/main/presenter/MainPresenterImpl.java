@@ -2,6 +2,8 @@ package com.yjc.mytaxi.main.presenter;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import android.view.View;
 
 import com.yjc.mytaxi.account.model.IAccountManager;
 import com.yjc.mytaxi.account.model.LoginResponse;
@@ -11,6 +13,7 @@ import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
 import com.yjc.mytaxi.common.lbs.LocationInfo;
 import com.yjc.mytaxi.main.model.IMainManager;
 import com.yjc.mytaxi.main.model.NearDriverResponse;
+import com.yjc.mytaxi.main.model.Order;
 import com.yjc.mytaxi.main.model.OrderStateOptResponse;
 import com.yjc.mytaxi.main.view.IMainView;
 
@@ -22,9 +25,12 @@ import java.lang.ref.WeakReference;
 
 public class MainPresenterImpl implements IMainPresenter {
 
+    private static final String TAG = "MainPresenterImpl";
     private IMainView view;
     private IAccountManager accountManager;
     private IMainManager mainManager;
+    //当前订单
+    private Order mCurrentOrder;
 
     public MainPresenterImpl(IMainView view, IAccountManager accountManager,
                              IMainManager mainManager) {
@@ -66,11 +72,21 @@ public class MainPresenterImpl implements IMainPresenter {
             //呼叫司机
             if(response.getCode()==BaseBizResponse.STATE_OK){
                 view.showCallDriverSuc();
+                //保存当前订单
+                mCurrentOrder=response.getData();
             }else {
                 view.showCallDriverFail();
             }
+        }else if(response.getState()==OrderStateOptResponse.ORDER_STATE_CANCEL){
+            //取消订单
+            if(response.getCode()==BaseBizResponse.STATE_OK){
+                view.showCancelSuc();
+            }else {
+                view.showCancelFail();
+            }
         }
     }
+
     @Override
     public void loginByToken() {
         accountManager.loginByToken();
@@ -89,5 +105,15 @@ public class MainPresenterImpl implements IMainPresenter {
     @Override
     public void callDriver(String pushKey, float cost, LocationInfo startLocation, LocationInfo endLocation) {
         mainManager.callDriver(pushKey,cost,startLocation,endLocation);
+    }
+
+    @Override
+    public void cancel() {
+        if(mCurrentOrder!=null){
+//            Log.d(TAG,"cancel");
+            mainManager.cancelOrder(mCurrentOrder.getOrderId());
+        }else {
+            view.showCancelSuc();
+        }
     }
 }

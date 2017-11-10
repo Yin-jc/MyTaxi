@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     private Bitmap mEndBit;
     //操作状态相关元素
     private View mOptArea;
+    private View mSelectArea;
     private View mLoadingArea;
     private TextView mTips;
     private TextView mLoadingText;
@@ -92,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     private float mCost;
     //判断当前是否已经登录
     private boolean mIsLogin;
+
+    private Bitmap mLocationBit;
 
 
     @Override
@@ -155,7 +158,8 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         mStartEdit= (AutoCompleteTextView) findViewById(R.id.start);
         mEndEdit= (AutoCompleteTextView) findViewById(R.id.end);
         mCity= (TextView) findViewById(R.id.city);
-//        mOptArea = findViewById(R.id.optArea);
+        mOptArea = findViewById(R.id.optArea);
+        mSelectArea=findViewById(R.id.select_area);
         mLoadingArea = findViewById(R.id.loading_area);
         mLoadingText = (TextView) findViewById(R.id.loading_text);
         mBtnCall = (Button) findViewById(R.id.btn_call_driver);
@@ -199,7 +203,8 @@ public class MainActivity extends AppCompatActivity implements IMainView{
                         callDriver();
                         break;
                     case R.id.btn_cancel:
-                        // TODO: 2017/11/9/009 取消呼叫 
+                        // 取消呼叫
+                        cancel();
                         break;
                     case R.id.btn_pay:
                         // TODO: 2017/11/9/009 支付 
@@ -210,6 +215,30 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         mBtnCall.setOnClickListener(listener);
         mBtnCancel.setOnClickListener(listener);
         mBtnPay.setOnClickListener(listener);
+    }
+
+    /**
+     * 取消呼叫
+     */
+    private void cancel() {
+        if(!mBtnCall.isEnabled()){
+            //说明已经点击了呼叫
+            showCanceling();
+            mPresenter.cancel();
+        }else {
+            //只是显示了路径信息，还没呼叫
+            restoreUI();
+        }
+    }
+
+    /**
+     * 显示取消中
+     */
+    private void showCanceling() {
+        mTips.setVisibility(View.GONE);
+        mLoadingArea.setVisibility(View.VISIBLE);
+        mLoadingText.setText(getString(R.string.canceling));
+        mBtnCancel.setEnabled(false);
     }
 
     /**
@@ -224,10 +253,14 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         }else {
             //未登录，先登录
             mPresenter.loginByToken();
+            mIsLogin=true;
             ToastUtil.show(this,"请先登录");
         }
     }
 
+    /**
+     * 显示呼叫中
+     */
     private void showCalling() {
         mTips.setVisibility(View.GONE);
         mLoadingArea.setVisibility(View.VISIBLE);
@@ -242,8 +275,9 @@ public class MainActivity extends AppCompatActivity implements IMainView{
      */
     private void updatePoiList(final List<LocationInfo> results) {
         List<String> listString=new ArrayList<>();
-        for(int i=0;i<results.size();i++){
+        for(int i=0;i<results.size();i++) {
             listString.add(results.get(i).getName());
+        }
             if(mEndAdapter==null){
                 mEndAdapter=new PoiAdapter(getApplicationContext(),listString);
                 mEndEdit.setAdapter(mEndAdapter);
@@ -262,7 +296,6 @@ public class MainActivity extends AppCompatActivity implements IMainView{
                 }
             });
             mEndAdapter.notifyDataSetChanged();
-        }
     }
 
     /**
@@ -294,6 +327,8 @@ public class MainActivity extends AppCompatActivity implements IMainView{
     }
 
     private void showOptArea() {
+        mSelectArea.setVisibility(View.GONE);
+        mOptArea.setVisibility(View.VISIBLE);
     }
 
     private void addEndMarker() {
@@ -396,6 +431,56 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         mTips.setVisibility(View.VISIBLE);
         mTips.setText(getString(R.string.show_call_fail));
     }
+
+    /**
+     * 订单取消成功
+     */
+    @Override
+    public void showCancelSuc() {
+        ToastUtil.show(this,getString(R.string.order_cancel_suc));
+        restoreUI();
+    }
+
+    /**
+     * 订单取消失败
+     */
+    @Override
+    public void showCancelFail() {
+        ToastUtil.show(this,getString(R.string.order_cancel_error));
+        mBtnCancel.setEnabled(true);
+    }
+
+    /**
+     * 恢复UI
+     */
+    private void restoreUI() {
+        //清除地图上所有标记
+        mLbsLayer.clearAllMarkers();
+        //添加定位标记
+        addLocationMarker();
+        //恢复地图视野,第二个参数为缩放系数
+        mLbsLayer.moveCameraToPoint(mStartLocation,17);
+        //获取附近司机
+        getNearDrivers(mStartLocation.getLatitude(),
+                mStartLocation.getLongitude());
+        //隐藏操作栏
+        hideOptAreaAndShowSelectArea();
+    }
+
+    private void hideOptAreaAndShowSelectArea() {
+        mOptArea.setVisibility(View.GONE);
+        mSelectArea.setVisibility(View.VISIBLE);
+    }
+
+    private void addLocationMarker() {
+        if(mLocationBit==null || mLocationBit.isRecycled()){
+            mLocationBit=BitmapFactory.decodeResource(getResources(),
+                    R.drawable.navi_map_gps_locked);
+        }
+        mLbsLayer.addOrUpdateMarker(mStartLocation,mLocationBit);
+    }
+
+
 
     /**
      * 方法必须重写

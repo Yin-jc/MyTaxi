@@ -395,5 +395,14 @@ public class GaoDeLbsLayerImpl implements ILbsLayer {
             LogUtil.d(TAG,"moveCamera:"+e.getMessage());
         }
     }
+
+    @Override
+    public void moveCameraToPoint(LocationInfo locationInfo, int scale) {
+        LatLng latLng=new LatLng(locationInfo.getLatitude(),
+                locationInfo.getLongitude());
+        CameraUpdate up=CameraUpdateFactory.newCameraPosition(
+                new CameraPosition(latLng,scale,30,30));
+        aMap.moveCamera(up);
+    }
 }
 

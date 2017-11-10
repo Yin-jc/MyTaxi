@@ -33,4 +33,14 @@ public interface IMainView extends IView{
      * 显示呼叫司机失败
      */
     void showCallDriverFail();
+
+    /**
+     * 显示订单取消成功
+     */
+    void showCancelSuc();
+
+    /**
+     * 显示订单取消失败
+     */
+    void showCancelFail();
 }
