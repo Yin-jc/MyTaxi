@@ -405,6 +405,10 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         }
     }
 
+    /**
+     * 显示司机的标记
+     * @param locationInfo
+     */
     @Override
     public void showLocationChange(LocationInfo locationInfo) {
         if(mDriverBit==null || mDriverBit.isRecycled()){
@@ -486,6 +490,98 @@ public class MainActivity extends AppCompatActivity implements IMainView{
                         mTips.setText(stringBuilder.toString());
                     }
                 });
+    }
+
+    /**
+     * 显示司机到达上车点
+     * @param mCurrentOrder
+     */
+    @Override
+    public void showDriverArriveStart(Order mCurrentOrder) {
+        String arriveTemp=getString(R.string.driver_arrive);
+        mTips.setText(String.format(arriveTemp,mCurrentOrder.getName(),
+                mCurrentOrder.getCarNo()));
+    }
+
+    /**
+     * 显示开始行程
+     * @param order
+     */
+    @Override
+    public void showStartDrive(Order order) {
+        LocationInfo locationInfo=new LocationInfo(order.getDriverLatitude(),
+                order.getDriverLongitude());
+        //路径规划绘制
+        updateDriverToEndRoute(locationInfo,order);
+        //隐藏按钮
+        mBtnCancel.setVisibility(View.GONE);
+        mBtnCall.setVisibility(View.GONE);
+    }
+
+    /**
+     * 司机到终点的路径绘制或更新
+     * @param locationInfo
+     * @param order
+     */
+    @Override
+    public void updateDriverToEndRoute(LocationInfo locationInfo, final Order order) {
+        mLbsLayer.clearAllMarkers();
+        addEndMarker();
+        showLocationChange(locationInfo);
+        mLbsLayer.driveRoute(locationInfo, mEndLocation, Color.GREEN,
+                new ILbsLayer.OnRouteCompleteListener() {
+                    @Override
+                    public void onComplete(RouteInfo result) {
+                        String tipsTemp=getString(R.string.driving_info);
+                        mTips.setText(String.format(tipsTemp,
+                                order.getName(),
+                                order.getCarNo(),
+                                result.getDistance(),
+                                result.getDuration()));
+                    }
+                });
+        //聚焦
+        mLbsLayer.moveCamera(locationInfo,mEndLocation);
+    }
+
+    /**
+     * 显示到达终点
+     * @param order
+     */
+    @Override
+    public void showArriveEnd(Order order) {
+        String tipsTemp=getString(R.string.pay_info);
+        mTips.setText(String.format(tipsTemp,
+                order.getCost(),
+                order.getName(),
+                order.getCarNo()));
+        mBtnPay.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 司机到上车点的路径绘制或更新
+     * @param locationInfo
+     * @param order
+     */
+    @Override
+    public void updateDriverToStartRoute(LocationInfo locationInfo, final Order order) {
+        mLbsLayer.clearAllMarkers();
+        addLocationMarker();
+        showLocationChange(locationInfo);
+        mLbsLayer.driveRoute(locationInfo, mStartLocation, Color.GREEN,
+                new ILbsLayer.OnRouteCompleteListener() {
+                    @Override
+                    public void onComplete(RouteInfo result) {
+                        String tipsTemp=getString(R.string.accept_info);
+                        mTips.setText(String.format(tipsTemp,
+                                order.getName(),
+                                order.getCarNo(),
+                                result.getDistance(),
+                                result.getDuration()));
+                    }
+                });
+        //聚焦
+        mLbsLayer.moveCamera(locationInfo,mStartLocation);
     }
 
     /**

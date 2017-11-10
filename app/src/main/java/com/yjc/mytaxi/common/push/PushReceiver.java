@@ -52,7 +52,7 @@ public class PushReceiver extends BroadcastReceiver {
                             new OrderStateOptResponse();
                     stateOptResponse.setData(order);
                     stateOptResponse.setState(
-                            OrderStateOptResponse.ORDER_STATE_ACCEPT);
+                            order.getState());
                     stateOptResponse.setCode(BaseBizResponse.STATE_OK);
                     //通知UI
                     RxBus.getInstance().send(stateOptResponse);

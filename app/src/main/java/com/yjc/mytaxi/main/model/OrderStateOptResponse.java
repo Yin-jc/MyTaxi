@@ -14,6 +14,12 @@ public class OrderStateOptResponse extends BaseBizResponse{
     public static final int ORDER_STATE_CANCEL= -1;
     //司机接单
     public static final int ORDER_STATE_ACCEPT = 1;
+    //司机到达上车点
+    public static final int ORDER_STATE_ARRIVE_START = 2;
+    //开始行程
+    public static final int ORDER_STATE_START_DRIVE = 3;
+    //到达终点
+    public static final int ORDER_STATE_ARRIVE_END = 4;
 
     private int state;
     //携带操作订单

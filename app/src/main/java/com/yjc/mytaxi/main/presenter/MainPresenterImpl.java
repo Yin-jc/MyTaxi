@@ -63,7 +63,17 @@ public class MainPresenterImpl implements IMainPresenter {
 
     @RegisterBus
     public void onLocationInfo(LocationInfo locationInfo){
-        view.showLocationChange(locationInfo);
+        if(mCurrentOrder!=null &&
+                (mCurrentOrder.getState()==OrderStateOptResponse.ORDER_STATE_ACCEPT)){
+            //更新司机到上车点的路径信息
+            view.updateDriverToStartRoute(locationInfo,mCurrentOrder);
+        }else if(mCurrentOrder!=null &&
+                mCurrentOrder.getState()==OrderStateOptResponse.ORDER_STATE_START_DRIVE){
+            //更新司机到终点的路径信息
+            view.updateDriverToEndRoute(locationInfo,mCurrentOrder);
+        }else {
+            view.showLocationChange(locationInfo);
+        }
     }
 
     @RegisterBus
@@ -88,6 +98,18 @@ public class MainPresenterImpl implements IMainPresenter {
             //司机接单
             mCurrentOrder=response.getData();
             view.showDriverAcceptOrder(mCurrentOrder);
+        }else if(response.getState()==OrderStateOptResponse.ORDER_STATE_ARRIVE_START){
+            //司机到达上车点
+            mCurrentOrder=response.getData();
+            view.showDriverArriveStart(mCurrentOrder);
+        }else if(response.getState()==OrderStateOptResponse.ORDER_STATE_START_DRIVE){
+            //开始行程
+            mCurrentOrder=response.getData();
+            view.showStartDrive(mCurrentOrder);
+        }else if(response.getState()==OrderStateOptResponse.ORDER_STATE_ARRIVE_END){
+            //到达终点
+            mCurrentOrder=response.getData();
+            view.showArriveEnd(mCurrentOrder);
         }
     }
 
