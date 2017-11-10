@@ -32,6 +32,8 @@ public class API {
     public static final String CALL_DRIVER = "/f34e28da5816433d/callDriver";
     //取消订单
     public static final String CANCEL_ORDER = "/f34e28da5816433d/cancelOrder";
+    //支付
+    public static final String PAY = "/f34e28da5816433d/paySuc";
 
 
     /**

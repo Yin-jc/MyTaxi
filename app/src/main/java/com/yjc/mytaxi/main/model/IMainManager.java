@@ -15,4 +15,6 @@ public interface IMainManager {
     void callDriver(String pushKey, float cost, LocationInfo startLocation, LocationInfo endLocation);
 
     void cancelOrder(String orderId);
+
+    void pay(String orderId);
 }

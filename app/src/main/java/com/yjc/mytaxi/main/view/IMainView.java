@@ -81,4 +81,15 @@ public interface IMainView extends IView{
      * @param order
      */
     void updateDriverToEndRoute(LocationInfo locationInfo, Order order);
+
+    /**
+     * 支付成功
+     * @param order
+     */
+    void showPaySuc(Order order);
+
+    /**
+     * 支付失败
+     */
+    void showPayFail();
 }

@@ -208,7 +208,8 @@ public class MainActivity extends AppCompatActivity implements IMainView{
                         cancel();
                         break;
                     case R.id.btn_pay:
-                        // TODO: 2017/11/9/009 支付 
+                        // 支付
+                        pay();
                         break;
                 }
             }
@@ -216,6 +217,14 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         mBtnCall.setOnClickListener(listener);
         mBtnCancel.setOnClickListener(listener);
         mBtnPay.setOnClickListener(listener);
+    }
+
+    private void pay() {
+        mLoadingArea.setVisibility(View.VISIBLE);
+        mLoadingArea.setVisibility(View.VISIBLE);
+        mTips.setVisibility(View.GONE);
+        mLoadingText.setText(getString(R.string.paying));
+        mPresenter.pay();
     }
 
     /**
@@ -542,6 +551,25 @@ public class MainActivity extends AppCompatActivity implements IMainView{
                 });
         //聚焦
         mLbsLayer.moveCamera(locationInfo,mEndLocation);
+    }
+
+    /**
+     * 支付成功
+     * @param order
+     */
+    @Override
+    public void showPaySuc(Order order) {
+        restoreUI();
+        ToastUtil.show(this,getString(R.string.pay_suc));
+    }
+
+    /**
+     * 支付失败
+     */
+    @Override
+    public void showPayFail() {
+        restoreUI();
+        ToastUtil.show(this,getString(R.string.pay_fail));
     }
 
     /**

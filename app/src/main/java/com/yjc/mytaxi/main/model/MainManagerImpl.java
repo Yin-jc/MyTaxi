@@ -147,4 +147,24 @@ public class MainManagerImpl implements IMainManager{
             }
         });
     }
+
+    @Override
+    public void pay(final String orderId) {
+        RxBus.getInstance().chainProcess(new Func1() {
+            @Override
+            public Object call(Object o) {
+                IRequest request=new BaseRequest(API.Config.getDomain()+
+                API.PAY);
+                request.setBody("id",orderId);
+                IResponse response=mHttpClient.post(request,false);
+                OrderStateOptResponse orderStateOptResponse=
+                        new OrderStateOptResponse();
+                orderStateOptResponse.setCode(response.getCode());
+                orderStateOptResponse.setState(OrderStateOptResponse.PAY);
+
+                LogUtil.d(TAG,"cancel order:"+response.getData());
+                return orderStateOptResponse;
+            }
+        });
+    }
 }
