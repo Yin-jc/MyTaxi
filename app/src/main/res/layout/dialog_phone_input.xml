@@ -45,7 +45,8 @@
                 android:hint="请输入手机号码"
                 style="@style/Dialog.Input"
                 android:id="@+id/phone"
-                android:inputType="phone"/>
+                android:inputType="phone"
+                android:textColor="@color/color_text_normal"/>
         </LinearLayout>
     </LinearLayout>
 

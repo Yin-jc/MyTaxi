@@ -145,10 +145,10 @@ public class GaoDeLbsLayerImpl implements ILbsLayer {
             Marker marker=aMap.addMarker(options);
             marker.setRotateAngle(locationInfo.getRotation());
             markerMap.put(locationInfo.getKey(),marker);
-//            if(locationInfo.getKey().equals(KEY_MY_MARKERE)){
-//                //传感器控制我的位置标记旋转角度
-//                mSensorHelper.setCurrentMarker(marker);
-//            }
+            if(locationInfo.getKey().equals(KEY_MY_MARKERE)){
+                //传感器控制我的位置标记旋转角度
+                mSensorHelper.setCurrentMarker(marker);
+            }
         }
     }
 
@@ -287,7 +287,8 @@ public class GaoDeLbsLayerImpl implements ILbsLayer {
     }
 
     @Override
-    public void driveRoute(LocationInfo start, LocationInfo end, final int color, final OnRouteCompleteListener listener) {
+    public void driveRoute(LocationInfo start, LocationInfo end, final int color,
+                           final OnRouteCompleteListener listener) {
         //组装起点和终点的信息
         LatLonPoint startLatLng=new LatLonPoint(start.getLatitude(),
                 start.getLongitude());

@@ -145,6 +145,8 @@ public class MainManagerImpl implements IMainManager{
                 orderStateOptResponse.setCode(response.getCode());
                 orderStateOptResponse.setState(OrderStateOptResponse.ORDER_STATE_CANCEL);
                 LogUtil.d(TAG,"cancel order:"+response.getData());
+                LogUtil.d(TAG,"cancel order:"+response.getCode());
+                LogUtil.d(TAG,"cancel order:"+orderStateOptResponse.getCode());
                 return orderStateOptResponse;
             }
         });
@@ -170,6 +172,9 @@ public class MainManagerImpl implements IMainManager{
         });
     }
 
+    /**
+     * 获取进行中的订单
+     */
     @Override
     public void getProcessingOrder() {
         RxBus.getInstance().chainProcess(new Func1() {
@@ -191,10 +196,13 @@ public class MainManagerImpl implements IMainManager{
                     OrderStateOptResponse orderStateOptResponse=
                             new Gson().fromJson(response.getData(),
                                     OrderStateOptResponse.class);
-                    orderStateOptResponse.setCode(response.getCode());
-                    orderStateOptResponse.setState(orderStateOptResponse.getData().getState());
-                    LogUtil.d(TAG,"getProcessingOrder order state="+orderStateOptResponse);
-                    return orderStateOptResponse;
+                    // TODO: 2017/11/11/011 此处必须进行判断,否则会出现订单状态错乱
+                    if(orderStateOptResponse.getCode()==BaseBizResponse.STATE_OK){
+                        orderStateOptResponse.setCode(response.getCode());
+                        orderStateOptResponse.setState(orderStateOptResponse.getData().getState());
+                        LogUtil.d(TAG,"getProcessingOrder order state="+orderStateOptResponse);
+                        return orderStateOptResponse;
+                    }
                 }
                 return null;
             }

@@ -66,13 +66,13 @@ public class PoiAdapter extends ArrayAdapter {
         if(convertView==null){
             convertView=inflater.inflate(R.layout.poi_list_item,null);
             holder=new Holder();
-            holder.textView=convertView.findViewById(R.id.name);
+            holder.textView= (TextView) convertView.findViewById(R.id.name);
             convertView.setTag(holder);
         }else {
             Object tag=convertView.getTag();
             if(tag==null){
                 holder=new Holder();
-                holder.textView=convertView.findViewById(R.id.name);
+                holder.textView= (TextView) convertView.findViewById(R.id.name);
                 convertView.setTag(holder);
             }else {
                 holder= (Holder) tag;

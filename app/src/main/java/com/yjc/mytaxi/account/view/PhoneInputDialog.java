@@ -49,9 +49,9 @@ public class PhoneInputDialog extends Dialog {
     }
 
     private void initListener() {
-        mButton=findViewById(R.id.btn_next);
+        mButton= (Button) findViewById(R.id.btn_next);
         mButton.setEnabled(false);
-        mPhone=findViewById(R.id.phone);
+        mPhone= (EditText) findViewById(R.id.phone);
         //手机号输入框注册监听检查手机号输入是否合法
         mPhone.addTextChangedListener(new TextWatcher() {
             @Override

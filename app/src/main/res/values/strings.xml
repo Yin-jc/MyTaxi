@@ -63,4 +63,5 @@
     <string name="route_info_calling">正在呼叫，全程%1$d公里，预计%2$.2f元，%3$d分钟到达</string>
     <string name="pls_login">请先登录</string>
     <string name="driver_accept_order">司机接单了</string>
+    <string name="pls_input_smsCode">请输入验证码</string>
 </resources>

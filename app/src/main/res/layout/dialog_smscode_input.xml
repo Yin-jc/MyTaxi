@@ -26,7 +26,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="请输入验证码"
+            android:text="@string/pls_input_smsCode"
             android:id="@+id/dialog_title"
             style="@style/Dialog.Title"
             android:gravity="center_horizontal"/>
@@ -41,7 +41,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="重新发送"
+            android:text="@string/resend"
             android:id="@+id/btn_resent"
             android:layout_marginTop="12dp"
             android:layout_gravity="center_horizontal"
@@ -50,7 +50,7 @@
             android:textSize="11sp"/>
 
         <com.dalimao.corelibrary.VerificationCodeInput
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             ver:box="4"
@@ -58,7 +58,6 @@
             ver:box_bg_focus="@drawable/verification_edit_bg_focus"
             ver:child_h_padding="5dp"
             ver:inputType="number"
-            android:layout_centerInParent="true"
             android:id="@+id/verificationCodeInput">
         </com.dalimao.corelibrary.VerificationCodeInput>
 
@@ -73,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Error"
-            android:text="验证码错误"
+            android:text="@string/sms_code_error"
             android:id="@+id/error"
             android:padding="12dp"
             android:layout_gravity="center_horizontal"/>

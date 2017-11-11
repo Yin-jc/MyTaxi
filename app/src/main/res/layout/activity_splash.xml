@@ -23,7 +23,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:text="@string/splash_message"
-            android:textSize="@dimen/text_size_small"
+            android:padding="20dp"
+            android:textSize="@dimen/text_size_large"
             android:textColor="@color/color_text_dark"/>
 
     </LinearLayout>

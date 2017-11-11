@@ -504,28 +504,28 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         showOptArea();
         mBtnCall.setEnabled(false);
         //显示路径信息
-        if(order.getEndLatitude()!=0 ||
-                order.getEndLongitude()!=0){
-            mEndLocation=new LocationInfo(order.getEndLatitude(),
-                    order.getEndLongitude());
-            mEndLocation.setKey(LOCATION_END);
-            //绘制路径
-            showRoute(mStartLocation, mEndLocation, new ILbsLayer.OnRouteCompleteListener() {
-                @Override
-                public void onComplete(RouteInfo result) {
-                    LogUtil.d(TAG,"driverRoute:"+result);
-                    mLbsLayer.moveCamera(mStartLocation,mEndLocation);
-                    mCost=result.getTaxiCost();
-                    String infoString=getString(R.string.route_info_calling);
-                    mTips.setText(String.format(infoString,
-                            (int)result.getDistance(),
-                            mCost,
-                            result.getDuration()));
-                    mTips.setVisibility(View.VISIBLE);
-                    mBtnCall.setEnabled(false);
-                }
-            });
-        }
+//        if(order.getEndLatitude()!=0 ||
+//                order.getEndLongitude()!=0){
+//            mEndLocation=new LocationInfo(order.getEndLatitude(),
+//                    order.getEndLongitude());
+//            mEndLocation.setKey(LOCATION_END);
+//            //绘制路径
+//            showRoute(mStartLocation, mEndLocation, new ILbsLayer.OnRouteCompleteListener() {
+//                @Override
+//                public void onComplete(RouteInfo result) {
+//                    LogUtil.d(TAG,"driverRoute:"+result);
+//                    mLbsLayer.moveCamera(mStartLocation,mEndLocation);
+//                    mCost=result.getTaxiCost();
+//                    String infoString=getString(R.string.route_info_calling);
+//                    mTips.setText(String.format(infoString,
+//                            (int)result.getDistance(),
+//                            mCost,
+//                            result.getDuration()));
+//                    mTips.setVisibility(View.VISIBLE);
+//                    mBtnCall.setEnabled(false);
+//                }
+//            });
+//        }
         LogUtil.d(TAG,"showCallDriverSuc:"+order);
     }
 
@@ -616,7 +616,7 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         LocationInfo driverLocation=new LocationInfo(
                 mCurrentOrder.getDriverLatitude(),
                 mCurrentOrder.getDriverLongitude());
-        // TODO: 2017/11/11/011 what?
+        // TODO: 2017/11/11/011 是否可以去掉
         driverLocation.setKey(mCurrentOrder.getKey());
         showDriverLocation(driverLocation);
         //显示我的位置

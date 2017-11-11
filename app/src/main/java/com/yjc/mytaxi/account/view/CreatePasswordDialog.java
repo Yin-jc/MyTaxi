@@ -113,13 +113,13 @@ public class CreatePasswordDialog extends Dialog implements ICreatePasswordDialo
     }
 
     private void initViews() {
-        mPhone=findViewById(R.id.phone);
-        mPw=findViewById(R.id.pw);
-        mRePw=findViewById(R.id.pwl);
-        mBtnConfirm=findViewById(R.id.btn_confirm);
+        mPhone= (TextView) findViewById(R.id.phone);
+        mPw= (EditText) findViewById(R.id.pw);
+        mRePw= (EditText) findViewById(R.id.pwl);
+        mBtnConfirm= (Button) findViewById(R.id.btn_confirm);
         mLoading=findViewById(R.id.loading);
-        mTips=findViewById(R.id.tips);
-        mTitle=findViewById(R.id.dialog_title);
+        mTips= (TextView) findViewById(R.id.tips);
+        mTitle= (TextView) findViewById(R.id.dialog_title);
         findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

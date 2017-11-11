@@ -80,6 +80,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/end"
                 android:hint="@string/where_are_you_go"
+                android:textColorHint="@color/color_dark_gray"
                 android:textSize="14sp"
                 android:padding="12dp"
                 android:textColor="@color/color_text_normal"/>
@@ -150,7 +151,7 @@
                 android:layout_weight="1"
                 android:id="@+id/btn_cancel"/>
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Dialog.Button"
                 android:text="@string/pay"

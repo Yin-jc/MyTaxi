@@ -41,14 +41,16 @@
             android:hint="@string/pls_input_pw"
             style="@style/Dialog.Input"
             android:id="@+id/pw"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColor="@color/color_text_normal"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/pls_input_pw_again"
             style="@style/Dialog.Input"
             android:id="@+id/pwl"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:textColor="@color/color_text_normal"/>
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

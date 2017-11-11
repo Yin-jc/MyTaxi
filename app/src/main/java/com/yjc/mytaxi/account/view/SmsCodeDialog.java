@@ -65,11 +65,11 @@ public class SmsCodeDialog extends Dialog implements ISmsCodeDialogView{
         LayoutInflater inflater= (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View root =inflater.inflate(R.layout.dialog_smscode_input,null);
         setContentView(root);
-        mPhoneTV=findViewById(R.id.phone);
+        mPhoneTV= (TextView) findViewById(R.id.phone);
         String template="验证码已发送至%s";
         mPhoneTV.setText(String.format(template,mPhone));
-        mResentBtn=findViewById(R.id.btn_resent);
-        mVerificationCodeInput=findViewById(R.id.verificationCodeInput);
+        mResentBtn= (Button) findViewById(R.id.btn_resent);
+        mVerificationCodeInput= (VerificationCodeInput) findViewById(R.id.verificationCodeInput);
         mLoading=findViewById(R.id.loading);
         mErrorView=findViewById(R.id.error);
         mErrorView.setVisibility(View.GONE);

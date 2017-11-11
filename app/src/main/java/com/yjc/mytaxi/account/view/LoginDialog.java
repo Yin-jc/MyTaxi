@@ -90,11 +90,11 @@ public class LoginDialog extends Dialog implements ILoginView{
 
 
     private void initViews() {
-        mPhone=findViewById(R.id.phone);
-        mPw=findViewById(R.id.password);
-        mBtnConfirm=findViewById(R.id.btn_confirm);
+        mPhone= (TextView) findViewById(R.id.phone);
+        mPw= (EditText) findViewById(R.id.password);
+        mBtnConfirm= (Button) findViewById(R.id.btn_confirm);
         mLoading=findViewById(R.id.loading);
-        mTips=findViewById(R.id.tips);
+        mTips= (TextView) findViewById(R.id.tips);
         findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

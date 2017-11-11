@@ -54,6 +54,10 @@ public class MainPresenterImpl implements IMainPresenter {
         }
     }
 
+    /**
+     * 实时更新司机位置，处理推送消息
+     * @param locationInfo
+     */
     @RegisterBus
     public void onLocationInfo(LocationInfo locationInfo){
         if(mCurrentOrder!=null &&
@@ -83,7 +87,7 @@ public class MainPresenterImpl implements IMainPresenter {
         }else if(response.getState()==OrderStateOptResponse.ORDER_STATE_CANCEL){
             //取消订单
             if(response.getCode()==BaseBizResponse.STATE_OK){
-                // TODO: 2017/11/11/011 取消订单后重开应用，还是显示有订单
+                // Q: 取消订单后重开应用，还是显示有订单   A：解析response时加状态判断
                 mCurrentOrder=null;
                 view.showCancelSuc();
             }else {
@@ -91,20 +95,28 @@ public class MainPresenterImpl implements IMainPresenter {
             }
         }else if(response.getState()==OrderStateOptResponse.ORDER_STATE_ACCEPT){
             //司机接单
-            mCurrentOrder=response.getData();
-            view.showDriverAcceptOrder(mCurrentOrder);
+            if(response.getCode()==BaseBizResponse.STATE_OK) {
+                mCurrentOrder = response.getData();
+                view.showDriverAcceptOrder(mCurrentOrder);
+            }
         }else if(response.getState()==OrderStateOptResponse.ORDER_STATE_ARRIVE_START){
             //司机到达上车点
-            mCurrentOrder=response.getData();
-            view.showDriverArriveStart(mCurrentOrder);
+            if(response.getCode()==BaseBizResponse.STATE_OK) {
+                mCurrentOrder = response.getData();
+                view.showDriverArriveStart(mCurrentOrder);
+            }
         }else if(response.getState()==OrderStateOptResponse.ORDER_STATE_START_DRIVE){
             //开始行程
-            mCurrentOrder=response.getData();
-            view.showStartDrive(mCurrentOrder);
+            if(response.getCode()==BaseBizResponse.STATE_OK) {
+                mCurrentOrder = response.getData();
+                view.showStartDrive(mCurrentOrder);
+            }
         }else if(response.getState()==OrderStateOptResponse.ORDER_STATE_ARRIVE_END){
             //到达终点
-            mCurrentOrder=response.getData();
-            view.showArriveEnd(mCurrentOrder);
+            if(response.getCode()==BaseBizResponse.STATE_OK) {
+                mCurrentOrder = response.getData();
+                view.showArriveEnd(mCurrentOrder);
+            }
         }else if(response.getState()==OrderStateOptResponse.PAY){
             //支付
             if(response.getCode()==BaseBizResponse.STATE_OK){
@@ -144,7 +156,7 @@ public class MainPresenterImpl implements IMainPresenter {
     @Override
     public void cancel() {
         if(mCurrentOrder!=null){
-//            Log.d(TAG,"cancel");
+            LogUtil.d(TAG,"cancel");
             mainManager.cancelOrder(mCurrentOrder.getOrderId());
         }else {
             view.showCancelSuc();
