@@ -3,6 +3,7 @@ package com.yjc.mytaxi.common.dataBus;
 import android.util.Log;
 
 import com.yjc.mytaxi.common.lbs.LocationInfo;
+import com.yjc.mytaxi.common.util.LogUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -73,7 +74,7 @@ public class RxBus {
                         if(data==null){
                             return;
                         }
-                        Log.d(TAG,"chainProcess start");
+                        LogUtil.d(TAG,"chainProcess start");
                         send(data);
                     }
                 });
@@ -97,6 +98,7 @@ public class RxBus {
                     if (data.getClass().getName().equals(paramType.getName())) {
                         //参数类型和data一样，调用此方法
                         methodArray[i].invoke(target, new Object[]{data});
+                        LogUtil.d(TAG,"callMethodByAnnotation");
                     }
                 }
             } catch (IllegalAccessException e) {

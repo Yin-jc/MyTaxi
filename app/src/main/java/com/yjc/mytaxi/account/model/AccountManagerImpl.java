@@ -277,6 +277,22 @@ public class AccountManagerImpl implements IAccountManager {
         });
 
     }
+
+    @Override
+    public boolean isLogin() {
+        //获取本地登录信息
+        Account account= (Account) sharedPreferenceDao.get(SharedPreferenceDao.KEY_ACCOUNT,
+                Account.class);
+        //登录是否过期
+        boolean tokenValid=false;
+        if(account!=null){
+            if(Long.parseLong(account.getExpired())>System.currentTimeMillis()){
+                //token有效
+                tokenValid=true;
+            }
+        }
+        return tokenValid;
+    }
 }
 
 

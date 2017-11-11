@@ -12,9 +12,9 @@ public interface IMainPresenter {
     /**
      * 获取附近司机
      * @param latitude
-     * @param longtitude
+     * @param longitude
      */
-    void fetchNearDrivers(double latitude, double longtitude);
+    void fetchNearDrivers(double latitude, double longitude);
 
     /**
      * 上报当前位置
@@ -46,4 +46,10 @@ public interface IMainPresenter {
      * 获取进行中的订单
      */
     void getProcessingOrder();
+
+    /**
+     * 是否登录
+     * @return
+     */
+    boolean isLogin();
 }

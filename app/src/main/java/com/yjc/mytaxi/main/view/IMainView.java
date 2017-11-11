@@ -23,7 +23,7 @@ public interface IMainView extends IView{
      * 显示位置变化
      * @param locationInfo
      */
-    void showLocationChange(LocationInfo locationInfo);
+    void showDriverLocation(LocationInfo locationInfo);
 
     /**
      * 显示呼叫司机成功

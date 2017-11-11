@@ -5,6 +5,7 @@ import com.yjc.mytaxi.account.model.response.LoginResponse;
 import com.yjc.mytaxi.common.dataBus.RegisterBus;
 import com.yjc.mytaxi.common.http.biz.BaseBizResponse;
 import com.yjc.mytaxi.common.lbs.LocationInfo;
+import com.yjc.mytaxi.common.util.LogUtil;
 import com.yjc.mytaxi.main.model.IMainManager;
 import com.yjc.mytaxi.main.model.Response.NearDriverResponse;
 import com.yjc.mytaxi.main.model.bean.Order;
@@ -64,7 +65,7 @@ public class MainPresenterImpl implements IMainPresenter {
             //更新司机到终点的路径信息
             view.updateDriverToEndRoute(locationInfo,mCurrentOrder);
         }else {
-            view.showLocationChange(locationInfo);
+            view.showDriverLocation(locationInfo);
         }
     }
 
@@ -82,6 +83,8 @@ public class MainPresenterImpl implements IMainPresenter {
         }else if(response.getState()==OrderStateOptResponse.ORDER_STATE_CANCEL){
             //取消订单
             if(response.getCode()==BaseBizResponse.STATE_OK){
+                // TODO: 2017/11/11/011 取消订单后重开应用，还是显示有订单
+                mCurrentOrder=null;
                 view.showCancelSuc();
             }else {
                 view.showCancelFail();
@@ -110,6 +113,7 @@ public class MainPresenterImpl implements IMainPresenter {
                 view.showPayFail();
             }
         }
+        LogUtil.d("MainPresenterImpl", "getProcessingOrder" + mCurrentOrder);
     }
 
     @Override
@@ -118,8 +122,13 @@ public class MainPresenterImpl implements IMainPresenter {
     }
 
     @Override
-    public void fetchNearDrivers(double latitude, double longtitude) {
-        mainManager.fetchNearDrivers(latitude,longtitude);
+    public boolean isLogin() {
+        return accountManager.isLogin();
+    }
+
+    @Override
+    public void fetchNearDrivers(double latitude, double longitude) {
+        mainManager.fetchNearDrivers(latitude,longitude);
     }
 
     @Override
